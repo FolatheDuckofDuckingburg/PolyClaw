@@ -1,72 +1,119 @@
-# Claude Code
+# 🦀 PolyClaw
 
-![](https://img.shields.io/badge/Node.js-18%2B-brightgreen?style=flat-square) [![npm]](https://www.npmjs.com/package/@anthropic-ai/claude-code)
+> **The open-source, model-agnostic CLI coding agent.**  
+> Autonomous file editing, shell execution, and code analysis—powered by any LLM.
 
-[npm]: https://img.shields.io/npm/v/@anthropic-ai/claude-code.svg?style=flat-square
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](#)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-Claude Code is an agentic coding tool that lives in your terminal, understands your codebase, and helps you code faster by executing routine tasks, explaining complex code, and handling git workflows -- all through natural language commands. Use it in your terminal, IDE, or tag @claude on Github.
+---
 
-**Learn more in the [official documentation](https://code.claude.com/docs/en/overview)**.
+## 🔍 Why PolyClaw?
 
-<img src="./demo.gif" />
+**PolyClaw** is a vendor-independent fork of Claude Code. While the original tool locks terminal agentics into a single provider, PolyClaw provides a model-agnostic layer that routes agentic execution across local open-weights, proprietary cloud APIs, and custom enterprise endpoints.
 
-## Get started
-> [!NOTE]
-> Installation via npm is deprecated. Use one of the recommended methods below.
+| Feature | Claude Code | PolyClaw |
+| :--- | :--- | :--- |
+| **Primary Provider** | Anthropic Claude | **Any Provider** (Ollama, DeepSeek, OpenAI, Gemini, Claude) |
+| **Offline / Local Mode** | ❌ No | **✅ Yes** (via Ollama / LM Studio) |
+| **Multi-Model Routing** | ❌ Locked | **✅ Dynamic** (per command or project) |
+| **License** | Proprietary | **✅ MIT (Open Source)** |
 
-For more installation options, uninstall steps, and troubleshooting, see the [setup documentation](https://code.claude.com/docs/en/setup).
+---
 
-1. Install Claude Code:
+## ⚡ Quick Start
 
-    **MacOS/Linux (Recommended):**
-    ```bash
-    curl -fsSL https://claude.ai/install.sh | bash
-    ```
+### Installation
 
-    **Homebrew (MacOS/Linux):**
-    ```bash
-    brew install --cask claude-code
-    ```
+```
+# Global installation via npm
+npm install -g PolyClaw
 
-    **Windows (Recommended):**
-    ```powershell
-    irm https://claude.ai/install.ps1 | iex
-    ```
+# Or via pnpm
+pnpm add -g PolyClaw
 
-    **WinGet (Windows):**
-    ```powershell
-    winget install Anthropic.ClaudeCode
-    ```
+git clone [https://github.com/FolatheDuckofDuckingburg/PolyClaw.git](https://github.com/FolatheDuckofDuckingburg /PolyClaw.git)
+cd PolyClaw
+pnpm install
+pnpm build
+npm link
+```
+## ⚙️ Configuration & Providers
 
-    **NPM (Deprecated):**
-    ```bash
-    npm install -g @anthropic-ai/claude-code
-    ```
+### Local Models via Ollama (Free & Offline)
+```
+export POLYCLAW_PROVIDER=ollama
+export POLYCLAW_MODEL=deepseek-r1:8b
+export OLLAMA_HOST=http://localhost:11434
+```
 
-2. Navigate to your project directory and run `claude`.
+### DeepSeek API
+```
+export POLYCLAW_PROVIDER=deepseek
+export POLYCLAW_MODEL=deepseek-coder
+export DEEPSEEK_API_KEY=your_key_here
+```
 
-## Plugins
+### OpenAI
+```
+export POLYCLAW_PROVIDER=openai
+export POLYCLAW_MODEL=gpt-4o
+export OPENAI_API_KEY=your_key_here
+```
 
-This repository includes several Claude Code plugins that extend functionality with custom commands and agents. See the [plugins directory](./plugins/README.md) for detailed documentation on available plugins.
+### Google Gemini
+```
+export POLYCLAW_PROVIDER=gemini
+export POLYCLAW_MODEL=gemini-1.5-pro
+export GEMINI_API_KEY=your_key_here
+```
 
-## Reporting Bugs
+### Anthropic Claude
+```
+export POLYCLAW_PROVIDER=anthropic
+export POLYCLAW_MODEL=claude-3-5-sonnet-20241022
+export ANTHROPIC_API_KEY=your_key_here
+```
 
-We welcome your feedback. Use the `/bug` command to report issues directly within Claude Code, or file a [GitHub issue](https://github.com/anthropics/claude-code/issues).
+## 📄 Configuration File (~/.polyclawrc.json)
+You can save provider configurations locally instead of managing environment variables:
+```
+{
+  "defaultProvider": "ollama",
+  "providers": {
+    "ollama": {
+      "baseUrl": "http://localhost:11434",
+      "defaultModel": "deepseek-r1:8b"
+    },
+    "deepseek": {
+      "apiKey": "env:DEEPSEEK_API_KEY",
+      "defaultModel": "deepseek-coder"
+    },
+    "openai": {
+      "apiKey": "env:OPENAI_API_KEY",
+      "defaultModel": "gpt-4o"
+    }
+  },
+  "settings": {
+    "autoApproveCommands": false,
+    "theme": "dark"
+  }
+}
+```
+## 🚀 Usage Examples
+```
+# Interactive REPL session
+polyclaw
 
-## Connect on Discord
+# One-shot command execution
+polyclaw "Refactor src/utils.ts to handle async retries"
 
-Join the [Claude Developers Discord](https://anthropic.com/discord) to connect with other developers using Claude Code. Get help, share feedback, and discuss your projects with the community.
+# Override provider on the fly
+polyclaw --provider deepseek --model deepseek-coder "Fix failing unit tests in tests/auth.test.ts"
+```
+-----
+## 📄 License
 
-## Data collection, usage, and retention
+PolyClaw is released under the MIT License.
 
-When you use Claude Code, we collect feedback, which includes usage data (such as code acceptance or rejections), associated conversation data, and user feedback submitted via the `/bug` command.
-
-### How we use your data
-
-See our [data usage policies](https://code.claude.com/docs/en/data-usage).
-
-### Privacy safeguards
-
-We have implemented several safeguards to protect your data, including limited retention periods for sensitive information, restricted access to user session data, and clear policies against using feedback for model training.
-
-For full details, please review our [Commercial Terms of Service](https://www.anthropic.com/legal/commercial-terms) and [Privacy Policy](https://www.anthropic.com/legal/privacy).
