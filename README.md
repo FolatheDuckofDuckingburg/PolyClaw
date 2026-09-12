@@ -6,6 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](#)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Publish to npm](https://github.com/FolatheDuckofDuckingburg/PolyClaw/actions/workflows/publish.yml/badge.svg)](https://github.com/FolatheDuckofDuckingburg/PolyClaw/actions/workflows/publish.yml)
 
 ---
 
