@@ -1,4 +1,4 @@
-# 🦀 polyclaw
+# 🦀 PolyClaw
 
 > **The open-source, model-agnostic CLI coding agent.**  
 > Autonomous file editing, shell execution, and code analysis—powered by any LLM.
@@ -9,11 +9,11 @@
 
 ---
 
-## 🔍 Why polyclaw?
+## 🔍 Why PolyClaw?
 
-**polyclaw** is a vendor-independent fork of Claude Code. While the original tool locks terminal agentics into a single provider, polyclaw provides a model-agnostic layer that routes agentic execution across local open-weights, proprietary cloud APIs, and custom enterprise endpoints.
+**PolyClaw** is a vendor-independent fork of Claude Code. While the original tool locks terminal agentics into a single provider, PolyClaw provides a model-agnostic layer that routes agentic execution across local open-weights, proprietary cloud APIs, and custom enterprise endpoints.
 
-| Feature | Claude Code | polyclaw |
+| Feature | Claude Code | PolyClaw |
 | :--- | :--- | :--- |
 | **Primary Provider** | Anthropic Claude | **Any Provider** (Ollama, DeepSeek, OpenAI, Gemini, Claude) |
 | **Offline / Local Mode** | ❌ No | **✅ Yes** (via Ollama / LM Studio) |
@@ -28,13 +28,13 @@
 
 ```
 # Global installation via npm
-npm install -g polyclaw
+npm install -g PolyClaw
 
 # Or via pnpm
-pnpm add -g polyclaw
+pnpm add -g PolyClaw
 
-git clone [https://github.com/FolatheDuckofDuckingburg/polyclaw.git](https://github.com/FolatheDuckofDuckingburg/polyclaw.git)
-cd polyclaw
+git clone [https://github.com/FolatheDuckofDuckingburg/PolyClaw.git](https://github.com/FolatheDuckofDuckingburg/PolyClaw.git)
+cd PolyClaw
 pnpm install
 pnpm build
 npm link
@@ -43,40 +43,40 @@ npm link
 
 ### Local Models via Ollama (Free & Offline)
 ```
-export POLYCLAW_PROVIDER=ollama
-export POLYCLAW_MODEL=deepseek-r1:8b
+export PolyClaw_PROVIDER=ollama
+export PolyClaw_MODEL=deepseek-r1:8b
 export OLLAMA_HOST=http://localhost:11434
 ```
 
 ### DeepSeek API
 ```
-export POLYCLAW_PROVIDER=deepseek
-export POLYCLAW_MODEL=deepseek-coder
+export PolyClaw_PROVIDER=deepseek
+export PolyClaw_MODEL=deepseek-coder
 export DEEPSEEK_API_KEY=your_key_here
 ```
 
 ### OpenAI
 ```
-export POLYCLAW_PROVIDER=openai
-export POLYCLAW_MODEL=gpt-4o
+export PolyClaw_PROVIDER=openai
+export PolyClaw_MODEL=gpt-4o
 export OPENAI_API_KEY=your_key_here
 ```
 
 ### Google Gemini
 ```
-export POLYCLAW_PROVIDER=gemini
-export POLYCLAW_MODEL=gemini-1.5-pro
+export PolyClaw_PROVIDER=gemini
+export PolyClaw_MODEL=gemini-1.5-pro
 export GEMINI_API_KEY=your_key_here
 ```
 
 ### Anthropic Claude
 ```
-export POLYCLAW_PROVIDER=anthropic
-export POLYCLAW_MODEL=claude-3-5-sonnet-20241022
+export PolyClaw_PROVIDER=anthropic
+export PolyClaw_MODEL=claude-3-5-sonnet-20241022
 export ANTHROPIC_API_KEY=your_key_here
 ```
 
-## 📄 Configuration File (~/.polyclawrc.json)
+## 📄 Configuration File (~/.PolyClawrc.json)
 You can save provider configurations locally instead of managing environment variables:
 ```
 {
@@ -104,16 +104,16 @@ You can save provider configurations locally instead of managing environment var
 ## 🚀 Usage Examples
 ```
 # Interactive REPL session
-polyclaw
+PolyClaw
 
 # One-shot command execution
-polyclaw "Refactor src/utils.ts to handle async retries"
+PolyClaw "Refactor src/utils.ts to handle async retries"
 
 # Override provider on the fly
-polyclaw --provider deepseek --model deepseek-coder "Fix failing unit tests in tests/auth.test.ts"
+PolyClaw --provider deepseek --model deepseek-coder "Fix failing unit tests in tests/auth.test.ts"
 ```
 -----
 ## 📄 License
 
-polyclaw is released under the MIT License.
+PolyClaw is released under the MIT License.
 
