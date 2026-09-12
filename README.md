@@ -11,7 +11,7 @@
 
 ## 🔍 Why polyclaw?
 
-**polyclaw** is a vendor-independent fork of Claude Code. While the original tool locks terminal agentics into a single provider, PolyClaw provides a model-agnostic layer that routes agentic execution across local open-weights, proprietary cloud APIs, and custom enterprise endpoints.
+**polyclaw** is a vendor-independent fork of Claude Code. While the original tool locks terminal agentics into a single provider, polyclaw provides a model-agnostic layer that routes agentic execution across local open-weights, proprietary cloud APIs, and custom enterprise endpoints.
 
 | Feature | Claude Code | polyclaw |
 | :--- | :--- | :--- |
