@@ -6,7 +6,7 @@ export async function startRepl(engine: ClawEngine): Promise<void> {
   const rl = readline.createInterface({ input, output });
 
   console.log('\n🦀 PolyClaw');
-  console.log('Type "exit" or "quit" to leave.\n');
+  console.log('Type "help" or "?" for commands, "exit" or "quit" to leave.\n');
 
   try {
     while (true) {
@@ -14,12 +14,32 @@ export async function startRepl(engine: ClawEngine): Promise<void> {
       const trimmed = prompt.trim();
 
       if (!trimmed) continue;
-      if (trimmed.toLowerCase() === 'exit' || trimmed.toLowerCase() === 'quit') {
+
+      const lower = trimmed.toLowerCase();
+
+      if (lower === 'exit' || lower === 'quit') {
         break;
       }
 
+      if (lower === 'clear') {
+        console.clear();
+        continue;
+      }
+
+      if (lower === 'help' || lower === '?') {
+        console.log('\nPolyClaw REPL Commands:');
+        console.log('  help, ?      Display available REPL commands');
+        console.log('  clear        Clear the terminal screen');
+        console.log('  exit, quit   Exit PolyClaw\n');
+        console.log('Or type any prompt to execute a task with PolyClaw.\n');
+        continue;
+      }
+
       console.log();
-      await engine.execute(trimmed);
+      const outputText = await engine.execute(trimmed);
+      if (outputText) {
+        console.log(outputText);
+      }
       console.log();
     }
   } finally {
