@@ -1,52 +1,34 @@
-import { generateText, tool } from 'ai';
+import { streamText, tool } from 'ai';
 import { z } from 'zod';
-import { execa } from 'execa';
 import { execaCommand } from 'execa';
-import fs from 'fs/promises';
-import { getLanguageModel, ProviderConfig } from './providers/index.js';
+import { getLanguageModel } from './providers/index.js';
+import { ProviderConfig } from './types.js';
 
-export async function runAgent(prompt: string, config: ProviderConfig) {
+export async function runAgent(prompt: string, config: ProviderConfig): Promise<void> {
   const model = getLanguageModel(config);
 
-  const result = await generateText({
+  const result = streamText({
     model,
-    system: `You are PolyClaw, an autonomous CLI agent. You assist developers with file operations and shell tasks safely.`,
+    system: 'You are PolyClaw, an autonomous terminal agent.',
     prompt,
     maxSteps: config.maxSteps || 5,
-    maxSteps: config.maxSteps || 5, // Enables multi-step agentic loop
     tools: {
-      executeShellCommand: tool({
-        description: 'Run a shell command on the host machine.',
-        parameters: z.object({
-          command: z.string().describe('The bash/zsh command to run'),
-        }),
+      runShell: tool({
+        description: 'Execute shell commands in the workspace',
+        parameters: z.object({ command: z.string() }),
         execute: async ({ command }) => {
           try {
-            const { stdout, stderr } = await execa(command, { shell: true });
             const { stdout, stderr } = await execaCommand(command, { shell: true });
             return { stdout, stderr, exitCode: 0 };
-          } catch (error: any) {
-            return { error: error.message, exitCode: error.exitCode || 1 };
-          }
-        },
-      }),
-
-      readFile: tool({
-        description: 'Read contents of a file from the local workspace.',
-        parameters: z.object({
-          filePath: z.string().describe('Relative or absolute file path'),
-        }),
-        execute: async ({ filePath }) => {
-          try {
-            const content = await fs.readFile(filePath, 'utf-8');
-            return { content };
           } catch (err: any) {
-            return { error: `Failed to read file: ${err.message}` };
+            return { error: err.message, exitCode: err.exitCode || 1 };
           }
         },
       }),
     },
   });
 
-  return result.text;
+  for await (const textPart of result.textStream) {
+    process.stdout.write(textPart);
+  }
 }
