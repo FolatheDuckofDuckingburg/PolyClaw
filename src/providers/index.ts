@@ -4,14 +4,9 @@ import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { createOllama } from 'ollama-ai-provider';
 import { LanguageModel } from 'ai';
 
-export type ProviderType = 'anthropic' | 'openai' | 'deepseek' | 'gemini' | 'ollama';
+import { ProviderConfig, ProviderType } from '../types.js';
 
-export interface ProviderConfig {
-  provider: ProviderType;
-  modelName: string;
-  apiKey?: string;
-  baseUrl?: string;
-}
+export { ProviderConfig, ProviderType };
 
 export function getLanguageModel(config: ProviderConfig): LanguageModel {
   const { provider, modelName, apiKey, baseUrl } = config;
