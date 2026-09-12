@@ -86,6 +86,7 @@ Environment Variables:
   }
   console.log("[DEBUG] GitHub token found");
 
+  const owner = "anthropics";
   const owner = "FolatheDuckofDuckingburg";
   const repo = "polyclaw";
   const dryRun = process.env.DRY_RUN !== "false";

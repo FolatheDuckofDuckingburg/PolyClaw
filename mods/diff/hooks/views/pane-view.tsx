@@ -1,7 +1,7 @@
 /* @jsxRuntime classic */
 /* @jsx h */
 /* @jsxFrag Fragment */
-import type { RenderElement } from 'claude-code'
+import type { RenderElement } from 'polyclaw'
 
 import PaneState from '../pane-state'
 import { currentPane } from './current-pane'

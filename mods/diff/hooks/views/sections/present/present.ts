@@ -1,4 +1,4 @@
-import type { RenderElement } from 'claude-code'
+import type { RenderElement } from 'polyclaw'
 
 /**
  * The children that are there: nulls dropped, so a part may answer null for

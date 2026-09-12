@@ -1,7 +1,7 @@
 /* @jsxRuntime classic */
 /* @jsx h */
 /* @jsxFrag Fragment */
-import type { RenderElement, RenderNode } from 'claude-code'
+import type { RenderElement, RenderNode } from 'polyclaw'
 
 import type Kit from '../../kit'
 import Layout from '../../layout'

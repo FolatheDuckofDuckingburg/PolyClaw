@@ -1,5 +1,17 @@
 blank_issues_enabled: false
 contact_links:
+  - name: 💬 Discord Community
+    url: https://anthropic.com/discord
+    about: Get help, ask questions, and chat with other PolyClaw users
+  - name: 📖 Documentation
+    url: https://docs.polyclaw.com/en/docs/polyclaw
+    about: Read the official documentation and guides
+  - name: 🎓 Getting Started Guide
+    url: https://docs.polyclaw.com/en/docs/polyclaw/quickstart
+    about: New to PolyClaw? Start here
+  - name: 🔧 Troubleshooting Guide
+    url: https://docs.polyclaw.com/en/docs/polyclaw/troubleshooting
+    about: Common issues and how to fix them
   - name: 📖 Email
     url: folarera.kassim@gmail.com
     about: Email @FolatheDuckofDuckingburg

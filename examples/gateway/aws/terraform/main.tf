@@ -1,6 +1,6 @@
-# Claude apps gateway on ECS Fargate — Terraform equivalent of setup.sh.
+# PolyClaw apps gateway on ECS Fargate — Terraform equivalent of setup.sh.
 # Section markers (§N) map to setup.sh and the walkthrough:
-# https://code.claude.com/docs/en/claude-apps-gateway-on-aws
+# https://code.polyclaw.com/docs/en/polyclaw-apps-gateway-on-aws
 #
 # Unlike the GCP example this module does NOT create the network — the VPC and
 # private subnets are walkthrough prerequisites, passed in as variables.
@@ -30,20 +30,20 @@ locals {
 # gateway :8080, gateway -> Postgres :5432. Nothing else is reachable.
 # Rules are separate resources (not inline) so they never fight other tooling.
 resource "aws_security_group" "alb" {
-  name        = "claude-gateway-alb"
-  description = "Claude gateway ALB"
+  name        = "polyclaw-gateway-alb"
+  description = "PolyClaw gateway ALB"
   vpc_id      = var.vpc_id
 }
 
 resource "aws_security_group" "gateway" {
-  name        = "claude-gateway-svc"
-  description = "Claude gateway service"
+  name        = "polyclaw-gateway-svc"
+  description = "PolyClaw gateway service"
   vpc_id      = var.vpc_id
 }
 
 resource "aws_security_group" "db" {
-  name        = "claude-gateway-db"
-  description = "Claude gateway Postgres"
+  name        = "polyclaw-gateway-db"
+  description = "PolyClaw gateway Postgres"
   vpc_id      = var.vpc_id
 }
 
@@ -95,7 +95,7 @@ resource "aws_vpc_security_group_egress_rule" "gateway_all" {
 
 # ── 2 IAM roles (least-privilege) ───────────────────────────────────────────
 # Task role: the gateway's runtime identity. Its ONLY permission is invoking
-# Claude models on Bedrock — the upstream's `auth: {}` resolves to this role
+# PolyClaw models on Bedrock — the upstream's `auth: {}` resolves to this role
 # via the AWS default credential chain. The policy must cover both the
 # cross-region inference-profile ARNs and the underlying foundation-model ARNs.
 data "aws_iam_policy_document" "ecs_trust" {
@@ -138,7 +138,7 @@ resource "aws_iam_role_policy" "bedrock_invoke" {
   # ARNs are wrong. Anywhere else the deploy provisions fine and then every
   # model call fails. Other-region deploys must pin region-appropriate
   # profiles via a models: block in gateway.yaml (see the config reference's
-  # models: guidance: https://code.claude.com/docs/en/claude-apps-gateway-config),
+  # models: guidance: https://code.polyclaw.com/docs/en/polyclaw-apps-gateway-config),
   # widen the inference-profile ARN geo prefix above, and set
   # allow_non_us_region = true.
   lifecycle {
@@ -199,7 +199,7 @@ resource "aws_ecr_repository" "repo" {
 # ── 3 RDS for PostgreSQL (private subnets, no public address) ───────────────
 resource "aws_db_subnet_group" "db" {
   name        = var.db_instance
-  description = "Claude gateway"
+  description = "PolyClaw gateway"
   subnet_ids  = var.private_subnet_ids
 }
 
@@ -217,7 +217,7 @@ resource "aws_db_subnet_group" "db" {
 resource "aws_db_parameter_group" "db" {
   name_prefix = "${var.db_instance}-"
   family      = "postgres${split(".", var.db_engine_version)[0]}"
-  description = "Claude gateway - require TLS on every connection"
+  description = "PolyClaw gateway - require TLS on every connection"
 
   parameter {
     name  = "rds.force_ssl"
@@ -275,7 +275,7 @@ resource "aws_secretsmanager_secret" "postgres_url" {
 
 # sslmode=verify-full: the gateway's driver (Bun.SQL) honors sslmode from the
 # URL and verifies the server certificate chain AND hostname. The trust anchor
-# is the AWS RDS CA bundle baked into the image at /etc/claude/rds-global-bundle.pem
+# is the AWS RDS CA bundle baked into the image at /etc/polyclaw/rds-global-bundle.pem
 # and loaded via NODE_EXTRA_CA_CERTS (see ../Dockerfile) — do NOT add a
 # libpq-style `sslrootcert=` query param: the driver doesn't read it and
 # forwards it to Postgres as a startup parameter, which the server rejects.

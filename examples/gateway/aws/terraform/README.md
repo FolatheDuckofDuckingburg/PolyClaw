@@ -1,7 +1,7 @@
-# Claude apps gateway — Terraform (ECS Fargate)
+# PolyClaw apps gateway — Terraform (ECS Fargate)
 
 Terraform equivalent of `../setup.sh`. Lets end-users provision and manage
-the gateway with `terraform apply`. Covers the same scope ([walkthrough](https://code.claude.com/docs/en/claude-apps-gateway-on-aws) §1–7,
+the gateway with `terraform apply`. Covers the same scope ([walkthrough](https://code.polyclaw.com/docs/en/polyclaw-apps-gateway-on-aws) §1–7,
 ECS track): security groups → task + execution IAM roles → ECR repository →
 private-subnet RDS for PostgreSQL → Secrets Manager secrets → ECS Fargate
 service behind an internal ALB. The VPC and private subnets are walkthrough
@@ -27,9 +27,9 @@ created here.
    **baked into the image**, and `public_url` is your own internal hostname,
    which you choose up front (you already hold its ACM certificate).
    `gateway.yaml` is gitignored; the committed template is `gateway.yaml.example`.
-2. The **prebuilt linux-x64 `claude` binary at `../claude`** — the Claude Code
+2. The **prebuilt linux-x64 `polyclaw` binary at `../polyclaw`** — the PolyClaw
    release binary, which includes the `gateway` subcommand (see the
-   [walkthrough](https://code.claude.com/docs/en/claude-apps-gateway-on-aws)).
+   [walkthrough](https://code.polyclaw.com/docs/en/polyclaw-apps-gateway-on-aws)).
    See `../setup.sh`'s `DIST_URL`/`DIST_SHA256` download path for a
    checksum-verified fetch.
 3. A **VPC with two+ private subnets** in different AZs and NAT egress, an **ACM
@@ -61,7 +61,7 @@ terraform apply -target=aws_ecr_repository.repo
 
 # 2. Build and push the image (gateway.yaml and the RDS CA bundle are baked in;
 #    the COPY sources are context-relative — the build context `..` is aws/, so
-#    `claude`, `gateway.yaml`, and `rds-global-bundle.pem`).
+#    `polyclaw`, `gateway.yaml`, and `rds-global-bundle.pem`).
 #    The CA bundle is the trust anchor for the connection string's
 #    sslmode=verify-full (AWS rotates it; download it when absent — don't commit it):
 curl -fL --proto '=https' -o ../rds-global-bundle.pem \
@@ -69,9 +69,9 @@ curl -fL --proto '=https' -o ../rds-global-bundle.pem \
 aws ecr get-login-password --region us-east-1 \
   | docker login --username AWS --password-stdin <account-id>.dkr.ecr.us-east-1.amazonaws.com
 docker build --platform=linux/amd64 --provenance=false \
-  -f ../Dockerfile --build-arg CLAUDE_BINARY=claude --build-arg GATEWAY_CONFIG=gateway.yaml \
-  -t <account-id>.dkr.ecr.us-east-1.amazonaws.com/claude-gateway:<version> ..
-docker push <account-id>.dkr.ecr.us-east-1.amazonaws.com/claude-gateway:<version>
+  -f ../Dockerfile --build-arg POLYCLAW_BINARY=polyclaw --build-arg GATEWAY_CONFIG=gateway.yaml \
+  -t <account-id>.dkr.ecr.us-east-1.amazonaws.com/polyclaw-gateway:<version> ..
+docker push <account-id>.dkr.ecr.us-east-1.amazonaws.com/polyclaw-gateway:<version>
 
 # 3. Full apply:
 terraform apply
@@ -163,7 +163,7 @@ Add a backend so state is shared and locked (and out of git):
 terraform {
   backend "s3" {
     bucket       = "<your-tf-state-bucket>"
-    key          = "claude-gateway/ecs"
+    key          = "polyclaw-gateway/ecs"
     region       = "us-east-1"
     use_lockfile = true # S3-native locking (Terraform >= 1.10); or set dynamodb_table
   }

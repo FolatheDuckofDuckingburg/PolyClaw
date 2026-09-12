@@ -8,7 +8,7 @@
  *
  * @entry
  */
-declare module 'claude-code' {
+declare module 'polyclaw' {
   /**
    * How one use of a feature went: as hoped, degraded, or failed outright.
    */

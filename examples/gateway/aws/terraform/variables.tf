@@ -1,7 +1,7 @@
 # Inputs — mirror the env-overridable knobs in setup.sh (same defaults).
 
 variable "region" {
-  description = "AWS region for everything this module creates. Pick one where Bedrock serves the Claude models you need. (The Bedrock region the gateway calls is set separately inside gateway.yaml — keep the two equal.) The walkthrough is scoped to the commercial US regions (us-east-1/us-east-2/us-west-1/us-west-2 — GovCloud and ISO regions are different partitions); see allow_non_us_region."
+  description = "AWS region for everything this module creates. Pick one where Bedrock serves the PolyClaw models you need. (The Bedrock region the gateway calls is set separately inside gateway.yaml — keep the two equal.) The walkthrough is scoped to the commercial US regions (us-east-1/us-east-2/us-west-1/us-west-2 — GovCloud and ISO regions are different partitions); see allow_non_us_region."
   type        = string
   default     = "us-east-1"
 }
@@ -36,13 +36,13 @@ variable "corporate_cidr" {
 variable "task_role_name" {
   description = "ECS task role name (the gateway's runtime identity; its only permission is Bedrock invoke)."
   type        = string
-  default     = "claude-gateway-task"
+  default     = "polyclaw-gateway-task"
 }
 
 variable "execution_role_name" {
   description = "ECS execution role name (the ECS agent's identity: pulls the image, injects the secrets)."
   type        = string
-  default     = "claude-gateway-execution"
+  default     = "polyclaw-gateway-execution"
 }
 
 # ── Image (§6) ──────────────────────────────────────────────────────────────
@@ -51,7 +51,7 @@ variable "execution_role_name" {
 variable "ecr_repo" {
   description = "ECR repository name."
   type        = string
-  default     = "claude-gateway"
+  default     = "polyclaw-gateway"
 }
 
 variable "image_tag" {
@@ -73,7 +73,7 @@ variable "gateway_config_path" {
 variable "db_instance" {
   description = "RDS instance identifier."
   type        = string
-  default     = "claude-gateway-db"
+  default     = "polyclaw-gateway-db"
 }
 
 variable "db_engine_version" {
@@ -97,7 +97,7 @@ variable "db_allocated_storage" {
 variable "db_name" {
   description = "Database name."
   type        = string
-  default     = "claude_gateway"
+  default     = "polyclaw_gateway"
 }
 
 variable "db_user" {
@@ -138,19 +138,19 @@ variable "oidc_client_secret" {
 variable "cluster_name" {
   description = "ECS cluster name."
   type        = string
-  default     = "claude-gateway"
+  default     = "polyclaw-gateway"
 }
 
 variable "service_name" {
   description = "ECS service name (also used for the ALB and target group)."
   type        = string
-  default     = "claude-gateway"
+  default     = "polyclaw-gateway"
 }
 
 variable "log_group_name" {
   description = "CloudWatch Logs group for the gateway's stderr (audit events + operational logs)."
   type        = string
-  default     = "/ecs/claude-gateway"
+  default     = "/ecs/polyclaw-gateway"
 }
 
 variable "log_retention_days" {

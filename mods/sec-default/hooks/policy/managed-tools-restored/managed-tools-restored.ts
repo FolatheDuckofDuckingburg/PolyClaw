@@ -1,4 +1,4 @@
-import type { Settings, ToolInfo, ValueOrDeny } from 'claude-code'
+import type { Settings, ToolInfo, ValueOrDeny } from 'polyclaw'
 
 import { isOrgTool } from './is-org-tool'
 

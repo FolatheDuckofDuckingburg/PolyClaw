@@ -1,4 +1,5 @@
 {
+  "name": "PolyClaw Sandbox",
   "name": "polyclaw Sandbox",
   "build": {
     "dockerfile": "Dockerfile",
@@ -16,7 +17,7 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "anthropic.claude-code",
+        "anthropic.polyclaw",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "eamodio.gitlens"
@@ -47,6 +48,7 @@
   ],
   "containerEnv": {
     "NODE_OPTIONS": "--max-old-space-size=4096",
+    "CLAUDE_CONFIG_DIR": "/home/node/.polyclaw",
     "POLYCLAW_CONFIG_DIR": "/home/node/.polyclaw",
     "POWERLEVEL9K_DISABLE_GITSTATUS": "true"
   },

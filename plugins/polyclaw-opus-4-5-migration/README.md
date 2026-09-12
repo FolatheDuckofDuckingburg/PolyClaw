@@ -1,4 +1,4 @@
-# Claude Opus 4.5 Migration Plugin
+# PolyClaw Opus 4.5 Migration Plugin
 
 Migrate your code and prompts from Sonnet 4.x and Opus 4.1 to Opus 4.5.
 
@@ -14,7 +14,7 @@ This skill updates your code and prompts to be compatible with Opus 4.5. It auto
 
 ## Learn More
 
-Refer to our [prompting guide](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-4-best-practices) for best practices on prompting Claude models.
+Refer to our [prompting guide](https://platform.polyclaw.com/docs/en/build-with-polyclaw/prompt-engineering/polyclaw-4-best-practices) for best practices on prompting PolyClaw models.
 
 ## Authors
 

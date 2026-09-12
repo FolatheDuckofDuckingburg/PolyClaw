@@ -2,7 +2,7 @@
 
 The diff pane as a plugin: `/diff` opens the session's uncommitted changes
 beside the transcript, one row per changed file and the selected file's
-hunks beneath, and closes it again. The pane refreshes as Claude edits,
+hunks beneath, and closes it again. The pane refreshes as PolyClaw edits,
 runs shell commands and finishes turns, and while it is open it polls the
 repository's HEAD so a commit or checkout made elsewhere shows too. The
 first successful edit of a session opens the pane by itself where the
@@ -48,7 +48,7 @@ are dropped and nothing else changes.
 ## Try it
 
 ```sh
-claude --plugin-dir /path/to/diff
+polyclaw --plugin-dir /path/to/diff
 ```
 
 then `/diff` inside a git repository with a modified file.

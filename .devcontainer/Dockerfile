@@ -78,6 +78,8 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
   -a "export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
   -x
 
+# Install PolyClaw
+RUN npm install -g @anthropic-ai/polyclaw@${CLAUDE_CODE_VERSION}
 # Install polyclaw
 RUN npm install -g @FolatheDuckofDuckingburg/polyclaw@${POLYCLAW_VERSION}
 

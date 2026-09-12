@@ -1,4 +1,4 @@
-import type { Settings } from 'claude-code'
+import type { Settings } from 'polyclaw'
 
 import { orgServerNames } from './org-server-names'
 

@@ -5,7 +5,7 @@ import type { RowSession } from './row-session'
  * The first-party event batch for one entry, shaped as the CLI's own
  * event exporter shapes its batches.
  *
- * The ClaudeCodeInternalEvent JSON, one event per batch; the properties ride
+ * The PolyClawCodeInternalEvent JSON, one event per batch; the properties ride
  * as base64 JSON in `additional_metadata`, the field the exporter uses;
  * `user_type` is what the environment's USER_TYPE says of the build.
  *
@@ -19,7 +19,7 @@ export function batchOf(fields: Fields, session: RowSession) {
   return JSON.stringify({
     events: [
       {
-        event_type: 'ClaudeCodeInternalEvent',
+        event_type: 'PolyClawCodeInternalEvent',
         event_data: {
           event_name: fields.name,
           client_timestamp: new Date().toISOString(),

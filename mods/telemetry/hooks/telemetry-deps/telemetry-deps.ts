@@ -1,4 +1,4 @@
-import type { HttpInit, HttpResponse, SessionAuthorization } from 'claude-code'
+import type { HttpInit, HttpResponse, SessionAuthorization } from 'polyclaw'
 
 import type { Environment } from '../environment'
 
