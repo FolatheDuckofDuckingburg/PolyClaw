@@ -14,9 +14,9 @@ export function getLanguageModel(config: ProviderConfig): LanguageModel {
     case 'gemini':
       return google(config.model);
     case 'deepseek':
-      // DeepSeek is OpenAI-compatible; route through custom base URL if direct provider isn't loaded
+      // DeepSeek is OpenAI-compatible; route through custom lowercase baseUrl parameter mapping
       return openai(config.model, {
-        baseURL: config.baseUrl || 'https://deepseek.com',
+        baseUrl: config.baseUrl || 'https://deepseek.com',
       });
     case 'ollama': {
       const ollama = createOllama({
