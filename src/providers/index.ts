@@ -5,6 +5,8 @@ import { createOllama } from 'ollama-ai-provider';
 import { LanguageModel } from 'ai';
 import { ProviderConfig, ProviderType } from '../types.js';
 
+import { ProviderConfig, ProviderType } from '../types.js';
+
 export { ProviderConfig, ProviderType };
 
 export function getLanguageModel(config: ProviderConfig): LanguageModel {

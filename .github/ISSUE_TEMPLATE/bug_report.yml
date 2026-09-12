@@ -1,5 +1,6 @@
 name: 🐛 Bug Report
 description: Report a bug or unexpected behavior in PolyClaw
+description: Report a bug or unexpected behavior in polyclaw
 title: "[BUG] "
 labels:
   - bug
@@ -12,6 +13,8 @@ body:
         Before submitting, please check:
         - You're using the [latest version](https://www.npmjs.com/package/@anthropic-ai/polyclaw?activeTab=versions) of PolyClaw (`polyclaw --version`)
         - This issue hasn't already been reported by searching [existing issues](https://github.com/anthropics/polyclaw/issues?q=is%3Aissue%20state%3Aopen%20label%3Abug).
+        - You're using the [latest version](https://www.npmjs.com/package/@FolatheDuckofDuckingburg/polyclaw?activeTab=versions) of polyclaw (`polyclaw --version`) 
+        - This issue hasn't already been reported by searching [existing issues](https://github.com/FolatheDuckofDuckingburg/polyclaw/issues?q=is%3Aissue%20state%3Aopen%20label%3Abug).
         - This is a bug, not a feature request or support question
         
   - type: checkboxes
@@ -25,6 +28,11 @@ body:
         - label: This is a single bug report (please file separate reports for different bugs)
           required: true
         - label: I am using the latest version of PolyClaw
+        - label: I have searched [existing issues](https://github.com/FolatheDuckofDuckingburg/polyclaw/issues?q=is%3Aissue%20state%3Aopen%20label%3Abug) and this hasn't been reported yet
+          required: true
+        - label: This is a single bug report (please file separate reports for different bugs)
+          required: true
+        - label: I am using the latest version of polyclaw
           required: true
           
   - type: textarea
@@ -34,6 +42,7 @@ body:
       description: Describe what's happening that shouldn't be
       placeholder: |
         When I try to create a Python file, PolyClaw shows an error "EACCES: permission denied" and the file isn't created.
+        When I try to create a Python file, polyclaw shows an error "EACCES: permission denied" and the file isn't created.
         
         The command fails immediately after accepting the file write permission...
     validations:
@@ -45,6 +54,7 @@ body:
       label: What Should Happen?
       description: Describe the expected behavior
       placeholder: PolyClaw should create a Python script file successfully without errors
+      placeholder: polyclaw should create a Python script file successfully without errors
     validations:
       required: true
       
@@ -87,9 +97,11 @@ body:
     attributes:
       label: PolyClaw Model
       description: Which model were you using? (Run `/model` to check)
+      label: LLM
+      description: Which LLM were you using? (Run `/LLM` to check)
       options:
-        - Sonnet (default)
-        - Opus
+        - Claude
+        - OpenCode
         - Not sure / Multiple models
         - Other
     validations:
@@ -122,6 +134,9 @@ body:
       label: PolyClaw Version
       description: Run `polyclaw --version` and paste the output
       placeholder: "e.g., 1.0.123 (PolyClaw)"
+      label: polyclaw Version
+      description: Run `polyclaw --version` and paste the output
+      placeholder: "e.g., 1.0.123 (polyclaw)"
     validations:
       required: true
       

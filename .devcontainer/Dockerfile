@@ -3,7 +3,7 @@ FROM node:20
 ARG TZ
 ENV TZ="$TZ"
 
-ARG CLAUDE_CODE_VERSION=latest
+ARG POLYCLAW_VERSION=latest
 
 # Install basic development tools and iptables/ipset
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -80,6 +80,8 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
 
 # Install PolyClaw
 RUN npm install -g @anthropic-ai/polyclaw@${CLAUDE_CODE_VERSION}
+# Install polyclaw
+RUN npm install -g @FolatheDuckofDuckingburg/polyclaw@${POLYCLAW_VERSION}
 
 
 # Copy and set up firewall script

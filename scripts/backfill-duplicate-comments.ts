@@ -87,6 +87,7 @@ Environment Variables:
   console.log("[DEBUG] GitHub token found");
 
   const owner = "anthropics";
+  const owner = "FolatheDuckofDuckingburg";
   const repo = "polyclaw";
   const dryRun = process.env.DRY_RUN !== "false";
   const maxIssueNumber = parseInt(process.env.MAX_ISSUE_NUMBER || "4050", 10);
