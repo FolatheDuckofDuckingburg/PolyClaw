@@ -8,8 +8,8 @@ source, published as it is built into the binary.
 | Mod | What it does | Seated |
 | --- | --- | --- |
 | [`sec-default`](sec-default) | Keeps an organization's classic hooks, prompt content, managed settings and tool policy out of reach of the plugins a person installs; adds no policy of its own. | Outermost, on a machine with managed settings or for a Team or Enterprise organization, unless managed `prependPlugins` says otherwise |
-| [`diff`](diff) | `/diff`: the session's uncommitted changes in a pane beside the transcript, file by file with their hunks, refreshed as Claude edits files and runs commands. | Built in |
-| [`telemetry`](telemetry) | Adds `$.telemetry` (`log`, `mark`) in the `engine.create` fold so a plugin can record an event as a first-party analytics row; sends nothing wherever Claude Code's analytics are off. | Built in |
+| [`diff`](diff) | `/diff`: the session's uncommitted changes in a pane beside the transcript, file by file with their hunks, refreshed as PolyClaw edits files and runs commands. | Built in |
+| [`telemetry`](telemetry) | Adds `$.telemetry` (`log`, `mark`) in the `engine.create` fold so a plugin can record an event as a first-party analytics row; sends nothing wherever PolyClaw's analytics are off. | Built in |
 
 Each folder is a complete plugin: `.polyclaw-plugin/plugin.json`, a
 `hooks/hooks.json` naming the module, and TypeScript under `hooks/` typed
