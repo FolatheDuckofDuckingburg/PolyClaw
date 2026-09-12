@@ -3,15 +3,9 @@ import { createOpenAI } from '@ai-sdk/openai';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { createOllama } from 'ollama-ai-provider';
 import { LanguageModel } from 'ai';
+import { ProviderConfig, ProviderType } from '../types.js';
 
-export type ProviderType = 'anthropic' | 'openai' | 'deepseek' | 'gemini' | 'ollama';
-
-export interface ProviderConfig {
-  provider: ProviderType;
-  modelName: string;
-  apiKey?: string;
-  baseUrl?: string;
-}
+export { ProviderConfig, ProviderType };
 
 export function getLanguageModel(config: ProviderConfig): LanguageModel {
   const { provider, modelName, apiKey, baseUrl } = config;
@@ -32,7 +26,6 @@ export function getLanguageModel(config: ProviderConfig): LanguageModel {
     }
 
     case 'deepseek': {
-      // DeepSeek uses an OpenAI-compatible endpoint
       const deepseek = createOpenAI({
         apiKey: apiKey || process.env.DEEPSEEK_API_KEY,
         baseURL: baseUrl || 'https://api.deepseek.com/v1',

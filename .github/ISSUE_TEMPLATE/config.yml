@@ -2,13 +2,13 @@ blank_issues_enabled: false
 contact_links:
   - name: 💬 Discord Community
     url: https://anthropic.com/discord
-    about: Get help, ask questions, and chat with other Claude Code users
+    about: Get help, ask questions, and chat with other PolyClaw users
   - name: 📖 Documentation
-    url: https://docs.claude.com/en/docs/claude-code
+    url: https://docs.polyclaw.com/en/docs/polyclaw
     about: Read the official documentation and guides
   - name: 🎓 Getting Started Guide
-    url: https://docs.claude.com/en/docs/claude-code/quickstart
-    about: New to Claude Code? Start here
+    url: https://docs.polyclaw.com/en/docs/polyclaw/quickstart
+    about: New to PolyClaw? Start here
   - name: 🔧 Troubleshooting Guide
-    url: https://docs.claude.com/en/docs/claude-code/troubleshooting
+    url: https://docs.polyclaw.com/en/docs/polyclaw/troubleshooting
     about: Common issues and how to fix them

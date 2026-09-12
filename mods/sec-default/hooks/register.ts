@@ -1,4 +1,4 @@
-import type { On } from 'claude-code'
+import type { On } from 'polyclaw'
 
 import { pastUsers } from './past-users'
 import Policy from './policy'

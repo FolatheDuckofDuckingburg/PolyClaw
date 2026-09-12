@@ -43,8 +43,8 @@ RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhisto
 ENV DEVCONTAINER=true
 
 # Create workspace and config directories and set permissions
-RUN mkdir -p /workspace /home/node/.claude && \
-  chown -R node:node /workspace /home/node/.claude
+RUN mkdir -p /workspace /home/node/.polyclaw && \
+  chown -R node:node /workspace /home/node/.polyclaw
 
 WORKDIR /workspace
 
@@ -78,8 +78,8 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
   -a "export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
   -x
 
-# Install Claude
-RUN npm install -g @anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}
+# Install PolyClaw
+RUN npm install -g @anthropic-ai/polyclaw@${CLAUDE_CODE_VERSION}
 
 
 # Copy and set up firewall script

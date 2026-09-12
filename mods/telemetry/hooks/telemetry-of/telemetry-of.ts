@@ -45,7 +45,7 @@ export function telemetryOf(deps: TelemetryDeps): TelemetryTypes.Telemetry {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-service-name': 'claude-code',
+        'x-service-name': 'polyclaw',
       },
       auth: auth.handle,
       body,

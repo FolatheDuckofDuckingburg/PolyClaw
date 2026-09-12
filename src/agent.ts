@@ -1,8 +1,8 @@
 import { generateText, tool } from 'ai';
 import { z } from 'zod';
-import execa from 'execa';
+import { execa } from 'execa';
 import fs from 'fs/promises';
-import { getLanguageModel, ProviderConfig } from './providers';
+import { getLanguageModel, ProviderConfig } from './providers/index.js';
 
 export async function runAgent(prompt: string, config: ProviderConfig) {
   const model = getLanguageModel(config);
@@ -11,7 +11,7 @@ export async function runAgent(prompt: string, config: ProviderConfig) {
     model,
     system: `You are PolyClaw, an autonomous CLI agent. You assist developers with file operations and shell tasks safely.`,
     prompt,
-    maxSteps: 5, // Enables multi-step agentic loop
+    maxSteps: config.maxSteps || 5,
     tools: {
       executeShellCommand: tool({
         description: 'Run a shell command on the host machine.',
@@ -20,7 +20,7 @@ export async function runAgent(prompt: string, config: ProviderConfig) {
         }),
         execute: async ({ command }) => {
           try {
-            const { stdout, stderr } = await execa.command(command, { shell: true });
+            const { stdout, stderr } = await execa(command, { shell: true });
             return { stdout, stderr, exitCode: 0 };
           } catch (error: any) {
             return { error: error.message, exitCode: error.exitCode || 1 };

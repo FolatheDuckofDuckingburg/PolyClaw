@@ -1,4 +1,4 @@
-import type { On, ResultOf, SessionMessage, Timer } from 'claude-code'
+import type { On, ResultOf, SessionMessage, Timer } from 'polyclaw'
 
 import Ask from './ask'
 import Backend from './backend'
@@ -19,7 +19,7 @@ import Views from './views'
 
 /**
  * Registers the diff pane: `/diff` once the built-in stands down, the
- * pane's drawing and refresh, its opening on Claude's first edit, the ask.
+ * pane's drawing and refresh, its opening on PolyClaw's first edit, the ask.
  *
  * `session.start` binds the engine once, registers the command (refused
  * because the built-in holds it, the plugin does nothing) and pins the

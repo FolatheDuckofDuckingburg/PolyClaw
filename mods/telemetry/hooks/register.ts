@@ -1,4 +1,4 @@
-import type { On } from 'claude-code'
+import type { On } from 'polyclaw'
 
 import { telemetryOf } from './telemetry-of'
 
@@ -25,20 +25,20 @@ export function register(on: On) {
           userType: await beneath.env.get('USER_TYPE'),
           disableTelemetry: await beneath.env.get('DISABLE_TELEMETRY'),
           disableNonessentialTraffic: await beneath.env.get(
-            'CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC',
+            'POLYCLAW_DISABLE_NONESSENTIAL_TRAFFIC',
           ),
           doNotTrack: await beneath.env.get('DO_NOT_TRACK'),
-          customOauthUrl: await beneath.env.get('CLAUDE_CODE_CUSTOM_OAUTH_URL'),
-          useBedrock: await beneath.env.get('CLAUDE_CODE_USE_BEDROCK'),
-          useVertex: await beneath.env.get('CLAUDE_CODE_USE_VERTEX'),
-          useFoundry: await beneath.env.get('CLAUDE_CODE_USE_FOUNDRY'),
+          customOauthUrl: await beneath.env.get('POLYCLAW_CUSTOM_OAUTH_URL'),
+          useBedrock: await beneath.env.get('POLYCLAW_USE_BEDROCK'),
+          useVertex: await beneath.env.get('POLYCLAW_USE_VERTEX'),
+          useFoundry: await beneath.env.get('POLYCLAW_USE_FOUNDRY'),
           useAnthropicAws: await beneath.env.get(
-            'CLAUDE_CODE_USE_ANTHROPIC_AWS',
+            'POLYCLAW_USE_ANTHROPIC_AWS',
           ),
           useAnthropicGoogleCloud: await beneath.env.get(
-            'CLAUDE_CODE_USE_ANTHROPIC_GOOGLE_CLOUD',
+            'POLYCLAW_USE_ANTHROPIC_GOOGLE_CLOUD',
           ),
-          useMantle: await beneath.env.get('CLAUDE_CODE_USE_MANTLE'),
+          useMantle: await beneath.env.get('POLYCLAW_USE_MANTLE'),
         }),
         fetch: (url, init) => beneath.http.fetch(url, init),
       }),

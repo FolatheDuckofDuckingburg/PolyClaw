@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Configuration loader for hookify plugin.
 
-Loads and parses .claude/hookify.*.local.md files.
+Loads and parses .polyclaw/hookify.*.local.md files.
 """
 
 import os
@@ -196,7 +196,7 @@ def extract_frontmatter(content: str) -> tuple[Dict[str, Any], str]:
 
 
 def load_rules(event: Optional[str] = None) -> List[Rule]:
-    """Load all hookify rules from .claude directory.
+    """Load all hookify rules from .polyclaw directory.
 
     Args:
         event: Optional event filter ("bash", "file", "stop", etc.)
@@ -207,7 +207,7 @@ def load_rules(event: Optional[str] = None) -> List[Rule]:
     rules = []
 
     # Find all hookify.*.local.md files
-    pattern = os.path.join('.claude', 'hookify.*.local.md')
+    pattern = os.path.join('.polyclaw', 'hookify.*.local.md')
     files = glob.glob(pattern)
 
     for file_path in files:

@@ -28,7 +28,7 @@ cd my-plugin
 
 ## test-hook.sh
 
-Tests individual hook scripts with sample input before deploying to Claude Code.
+Tests individual hook scripts with sample input before deploying to PolyClaw.
 
 **Usage:**
 ```bash
@@ -53,7 +53,7 @@ Tests individual hook scripts with sample input before deploying to Claude Code.
 ```
 
 **Features:**
-- Sets up proper environment variables (CLAUDE_PROJECT_DIR, CLAUDE_PLUGIN_ROOT)
+- Sets up proper environment variables (POLYCLAW_PROJECT_DIR, POLYCLAW_PLUGIN_ROOT)
 - Measures execution time
 - Validates output JSON
 - Shows exit codes and their meanings
@@ -122,9 +122,9 @@ Checks hook scripts for common issues and best practices violations.
    ./validate-hook-schema.sh my-plugin/hooks/hooks.json
    ```
 
-7. **Test in Claude Code**
+7. **Test in PolyClaw**
    ```bash
-   claude --debug
+   polyclaw --debug
    ```
 
 ## Tips
@@ -142,7 +142,7 @@ Checks hook scripts for common issues and best practices violations.
 Check:
 - Script has shebang (`#!/bin/bash`)
 - Script is executable (`chmod +x`)
-- Path in hooks.json is correct (use `${CLAUDE_PLUGIN_ROOT}`)
+- Path in hooks.json is correct (use `${POLYCLAW_PLUGIN_ROOT}`)
 
 ### Hook times out
 

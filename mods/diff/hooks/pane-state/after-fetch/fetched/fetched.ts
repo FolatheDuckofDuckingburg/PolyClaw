@@ -1,4 +1,4 @@
-import type { SessionMessage } from 'claude-code'
+import type { SessionMessage } from 'polyclaw'
 
 import type Git from '../../../git'
 

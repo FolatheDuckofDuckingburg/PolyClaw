@@ -1,5 +1,5 @@
 {
-  "name": "Claude Code Sandbox",
+  "name": "PolyClaw Sandbox",
   "build": {
     "dockerfile": "Dockerfile",
     "args": {
@@ -16,7 +16,7 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "anthropic.claude-code",
+        "anthropic.polyclaw",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "eamodio.gitlens"
@@ -42,12 +42,12 @@
   },
   "remoteUser": "node",
   "mounts": [
-    "source=claude-code-bashhistory-${devcontainerId},target=/commandhistory,type=volume",
-    "source=claude-code-config-${devcontainerId},target=/home/node/.claude,type=volume"
+    "source=polyclaw-bashhistory-${devcontainerId},target=/commandhistory,type=volume",
+    "source=polyclaw-config-${devcontainerId},target=/home/node/.polyclaw,type=volume"
   ],
   "containerEnv": {
     "NODE_OPTIONS": "--max-old-space-size=4096",
-    "CLAUDE_CONFIG_DIR": "/home/node/.claude",
+    "CLAUDE_CONFIG_DIR": "/home/node/.polyclaw",
     "POWERLEVEL9K_DISABLE_GITSTATUS": "true"
   },
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=delegated",

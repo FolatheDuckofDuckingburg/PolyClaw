@@ -176,7 +176,7 @@ allowed-tools: Read, Write
 
 # First Run Check
 
-if [ ! -f ".claude/command-initialized" ]; then
+if [ ! -f ".polyclaw/command-initialized" ]; then
   **Welcome to Command Name!**
 
   This appears to be your first time using this command.
@@ -359,18 +359,18 @@ Default configuration:
 - color: true
 - max_results: 10
 
-Checking for user config: .claude/plugin-name.local.md
+Checking for user config: .polyclaw/plugin-name.local.md
 
-if [ -f ".claude/plugin-name.local.md" ]; then
+if [ -f ".polyclaw/plugin-name.local.md" ]; then
   # Parse YAML frontmatter for settings
-  VERBOSE=$(grep "^verbose:" .claude/plugin-name.local.md | cut -d: -f2 | tr -d ' ')
-  COLOR=$(grep "^color:" .claude/plugin-name.local.md | cut -d: -f2 | tr -d ' ')
-  MAX_RESULTS=$(grep "^max_results:" .claude/plugin-name.local.md | cut -d: -f2 | tr -d ' ')
+  VERBOSE=$(grep "^verbose:" .polyclaw/plugin-name.local.md | cut -d: -f2 | tr -d ' ')
+  COLOR=$(grep "^color:" .polyclaw/plugin-name.local.md | cut -d: -f2 | tr -d ' ')
+  MAX_RESULTS=$(grep "^max_results:" .polyclaw/plugin-name.local.md | cut -d: -f2 | tr -d ' ')
 
   echo "✓ Using user configuration"
 else
   echo "Using default configuration"
-  echo "Create .claude/plugin-name.local.md to customize"
+  echo "Create .polyclaw/plugin-name.local.md to customize"
 fi
 
 [Use configuration in command...]
@@ -395,7 +395,7 @@ These defaults work for 80% of use cases.
 Override with arguments:
   /command --format yaml --output file.txt --verbose
 
-Or set in .claude/plugin-name.local.md:
+Or set in .polyclaw/plugin-name.local.md:
 \`\`\`yaml
 ---
 format: yaml
@@ -667,13 +667,13 @@ description: Idempotent command
 
 Checking if operation already completed...
 
-if [ -f ".claude/operation-completed.flag" ]; then
+if [ -f ".polyclaw/operation-completed.flag" ]; then
   ℹ️  Operation already completed
 
-  Completed at: $(cat .claude/operation-completed.flag)
+  Completed at: $(cat .polyclaw/operation-completed.flag)
 
   To re-run:
-  1. Remove flag: rm .claude/operation-completed.flag
+  1. Remove flag: rm .polyclaw/operation-completed.flag
   2. Run command again
 
   Otherwise, no action needed.
@@ -686,7 +686,7 @@ Performing operation...
 [Safe, repeatable operation...]
 
 Marking complete...
-echo "$(date)" > .claude/operation-completed.flag
+echo "$(date)" > .polyclaw/operation-completed.flag
 ```
 
 **Atomic operations:**

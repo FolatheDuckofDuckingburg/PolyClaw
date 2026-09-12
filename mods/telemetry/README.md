@@ -12,7 +12,7 @@ one attempt, nothing batched; a session with no first-party credential, or
 an ingest that refuses, rejects the caller's promise.
 
 It sends nothing wherever the CLI's own analytics are off: under
-`DISABLE_TELEMETRY`, `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` or
+`DISABLE_TELEMETRY`, `POLYCLAW_DISABLE_NONESSENTIAL_TRAFFIC` or
 `DO_NOT_TRACK`, on any third-party provider (Bedrock, Vertex, Foundry and
 kin), and on a deployment with its own OAuth URL. Each is read through
 `$.env` at every call, rows go one after another, and the credential is

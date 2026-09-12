@@ -1,17 +1,17 @@
-# gateway.yaml.example — Claude apps gateway config template, AWS-shaped (walkthrough §4).
+# gateway.yaml.example — PolyClaw apps gateway config template, AWS-shaped (walkthrough §4).
 #
 # Okta IdP + Bedrock upstream, following the walkthrough at
-# https://code.claude.com/docs/en/claude-apps-gateway-on-aws. The active sections
+# https://code.polyclaw.com/docs/en/polyclaw-apps-gateway-on-aws. The active sections
 # below are a strict subset of the full configuration reference at
-# https://code.claude.com/docs/en/claude-apps-gateway-config; optional keys are
+# https://code.polyclaw.com/docs/en/polyclaw-apps-gateway-config; optional keys are
 # included commented-out.
 #
 # USAGE — this is the shippable TEMPLATE. Copy it to gateway.yaml and fill it in:
 #     cp gateway.yaml.example gateway.yaml
 #   setup.sh and terraform/ read gateway.yaml (your filled-in copy, which is
 #   gitignored). Unlike the GCP example it is NOT published to a secret store:
-#   the Dockerfile bakes it into the image at /etc/claude/gateway.yaml — the
-#   container ENTRYPOINT runs `claude gateway --config /etc/claude/gateway.yaml`.
+#   the Dockerfile bakes it into the image at /etc/polyclaw/gateway.yaml — the
+#   container ENTRYPOINT runs `polyclaw gateway --config /etc/polyclaw/gateway.yaml`.
 #   It holds no secret values; a config edit means an image rebuild (setup.sh
 #   tags images with a hash of this file, so a re-run rebuilds automatically).
 #
@@ -36,7 +36,7 @@ listen:
   # header (X-Forwarded-Host/-Proto are likewise never trusted). Set it to the
   # internal hostname you picked in the prerequisites — the Route 53 private
   # zone name your ACM certificate covers (e.g.
-  # https://claude-gateway.internal.example.com). Unlike Cloud Run there is no
+  # https://polyclaw-gateway.internal.example.com). Unlike Cloud Run there is no
   # first-deploy placeholder dance: you choose the hostname up front, alias it
   # to the internal ALB after the deploy, and register the same host's
   # /oauth/callback on the Okta app.
@@ -110,14 +110,14 @@ upstreams:
     # base_url: https://bedrock-runtime.us-east-1.amazonaws.com   # bedrock-runtime interface VPC endpoint, to keep model traffic off the public path
   # Add more upstreams for failover (tried top→bottom on 5xx/timeout/501): a
   # second region, or an anthropic/vertex fallback. See
-  # https://code.claude.com/docs/en/claude-apps-gateway.
+  # https://code.polyclaw.com/docs/en/polyclaw-apps-gateway.
 
 # ── Telemetry fan-out (OPTIONAL) ─────────────────────────────────────────────
 # The CLI sends OTLP/HTTP to the gateway; the gateway fans out, stamping
 # user.id/user.email/user.groups server-side. On AWS, point at an OpenTelemetry
 # Collector (e.g. the AWS Distro for OpenTelemetry -> CloudWatch / Managed
 # Prometheus). When forward_to and public_url are both configured the gateway
-# pushes CLAUDE_CODE_ENABLE_TELEMETRY and the OTEL exporter selectors to every
+# pushes POLYCLAW_ENABLE_TELEMETRY and the OTEL exporter selectors to every
 # client automatically — no per-developer config needed.
 # telemetry:
 #   forward_to:
@@ -135,11 +135,11 @@ upstreams:
 #   policies:
 #     - match: { groups: [engineering] }
 #       cli:
-#         availableModels: [claude-opus-4-8, claude-sonnet-4-6, claude-haiku-4-5]
+#         availableModels: [polyclaw-opus-4-8, polyclaw-sonnet-4-6, polyclaw-haiku-4-5]
 #         permissions: { deny: ["Read(./.env)", "Read(./secrets/**)"] }
 #     - match: {}        # catch-all floor — keep LAST
 #       cli:
-#         availableModels: [claude-sonnet-4-6, claude-haiku-4-5]
+#         availableModels: [polyclaw-sonnet-4-6, polyclaw-haiku-4-5]
 
 # ── Admin API (OPTIONAL — enables db-mode runtime config + spend caps) ───────
 # admin_groups needs a groups claim — Okta provides one via the `groups` scope
@@ -157,7 +157,7 @@ upstreams:
 #   # admin_groups: [platform-finops]   # Okta group names via the groups scope
 
 # ── Model catalog (OPTIONAL for US regions) ──────────────────────────────────
-# Default true: every built-in Claude model is exposed and auto-translated per
+# Default true: every built-in PolyClaw model is exposed and auto-translated per
 # upstream (the built-in table already maps to us.anthropic.* cross-region
 # inference profiles). Set false + a models: list to pin IDs (e.g. an
 # application or provisioned-throughput inference-profile ARN).
@@ -166,9 +166,9 @@ upstreams:
 # inference profiles (eu.anthropic.*, apac.anthropic.*, ...) here, and widen
 # the geo prefix in the deploy's bedrock-invoke IAM policy to match. See the
 # models: guidance in the config reference:
-# https://code.claude.com/docs/en/claude-apps-gateway-config
+# https://code.polyclaw.com/docs/en/polyclaw-apps-gateway-config
 # auto_include_builtin_models: true
 # models:
-#   - id: claude-opus-4-8
-#     label: Claude Opus 4.8
-#     upstream_model: { bedrock: us.anthropic.claude-opus-4-8 }
+#   - id: polyclaw-opus-4-8
+#     label: PolyClaw Opus 4.8
+#     upstream_model: { bedrock: us.anthropic.polyclaw-opus-4-8 }

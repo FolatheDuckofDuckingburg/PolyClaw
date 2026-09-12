@@ -1,4 +1,4 @@
-import type { PaneOpenArgs } from 'claude-code'
+import type { PaneOpenArgs } from 'polyclaw'
 
 /**
  * The part of `$.ui.open`'s argument that asks the surface for the

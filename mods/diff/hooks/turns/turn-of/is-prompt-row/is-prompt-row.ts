@@ -1,4 +1,4 @@
-import type { SessionMessage } from 'claude-code'
+import type { SessionMessage } from 'polyclaw'
 
 /**
  * Whether a transcript row starts a turn: a user message that carries text

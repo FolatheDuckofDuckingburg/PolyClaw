@@ -8,7 +8,7 @@
 
 set -euo pipefail
 
-REPO="anthropics/claude-code"
+REPO="anthropics/polyclaw"
 
 # Read from event payload so the issue number is bound to the triggering event.
 # Falls back to workflow_dispatch inputs for manual runs.
@@ -87,7 +87,7 @@ done
 BODY+=$'\n'"This issue will be automatically closed as a duplicate in 3 days."$'\n\n'
 BODY+="- If your issue is a duplicate, please close it and 👍 the existing issue instead"$'\n'
 BODY+="- To prevent auto-closure, add a comment or 👎 this comment"$'\n\n'
-BODY+="🤖 Generated with [Claude Code](https://claude.ai/code)"
+BODY+="🤖 Generated with [PolyClaw](https://polyclaw.ai/code)"
 
 # Post the comment
 gh issue comment "$BASE_ISSUE" --repo "$REPO" --body "$BODY"

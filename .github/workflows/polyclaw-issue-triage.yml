@@ -1,4 +1,4 @@
-name: Claude Issue Triage
+name: PolyClaw Issue Triage
 on:
   issues:
     types: [opened]
@@ -18,16 +18,16 @@ jobs:
     permissions:
       contents: read
       issues: write
-      # Required to mint the OIDC token exchanged for a Claude API access token (Workload Identity Federation)
+      # Required to mint the OIDC token exchanged for a PolyClaw API access token (Workload Identity Federation)
       id-token: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Run Claude Code for Issue Triage
+      - name: Run PolyClaw for Issue Triage
         timeout-minutes: 5
-        uses: anthropics/claude-code-action@v1
+        uses: anthropics/polyclaw-action@v1
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
@@ -36,12 +36,12 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           allowed_non_write_users: "*"
           prompt: "/triage-issue REPO: ${{ github.repository }} ISSUE_NUMBER: ${{ github.event.issue.number }} EVENT: ${{ github.event_name }}"
-          # Authenticate to the Claude API via Workload Identity Federation
+          # Authenticate to the PolyClaw API via Workload Identity Federation
           # (the workflow's OIDC token is exchanged for a short-lived access
           # token) instead of a static API key.
           anthropic_federation_rule_id: ${{ vars.ANTHROPIC_FEDERATION_RULE_ID }}
           anthropic_organization_id: ${{ vars.ANTHROPIC_ORGANIZATION_ID }}
           anthropic_service_account_id: ${{ vars.ANTHROPIC_SERVICE_ACCOUNT_ID }}
           anthropic_workspace_id: ${{ vars.ANTHROPIC_WORKSPACE_ID }}
-          claude_args: |
-            --model claude-opus-4-6
+          polyclaw_args: |
+            --model polyclaw-opus-4-6
