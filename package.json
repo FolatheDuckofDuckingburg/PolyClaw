@@ -1,5 +1,5 @@
 {
-  "name": "polyclaw",
+  "name": "polyclaw-cli",
   "version": "0.1.0",
   "description": "Model-agnostic autonomous CLI coding agent",
   "main": "dist/src/core/ClawEngine.js",
