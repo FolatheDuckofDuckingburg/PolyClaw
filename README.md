@@ -1,4 +1,4 @@
-# 🦀 PolyClaw
+# 🦀 polyclaw
 
 > **The open-source, model-agnostic CLI coding agent.**  
 > Autonomous file editing, shell execution, and code analysis—powered by any LLM.
@@ -9,11 +9,11 @@
 
 ---
 
-## 🔍 Why PolyClaw?
+## 🔍 Why polyclaw?
 
-**PolyClaw** is a vendor-independent fork of Claude Code. While the original tool locks terminal agentics into a single provider, PolyClaw provides a model-agnostic layer that routes agentic execution across local open-weights, proprietary cloud APIs, and custom enterprise endpoints.
+**polyclaw** is a vendor-independent fork of Claude Code. While the original tool locks terminal agentics into a single provider, PolyClaw provides a model-agnostic layer that routes agentic execution across local open-weights, proprietary cloud APIs, and custom enterprise endpoints.
 
-| Feature | Claude Code | PolyClaw |
+| Feature | Claude Code | polyclaw |
 | :--- | :--- | :--- |
 | **Primary Provider** | Anthropic Claude | **Any Provider** (Ollama, DeepSeek, OpenAI, Gemini, Claude) |
 | **Offline / Local Mode** | ❌ No | **✅ Yes** (via Ollama / LM Studio) |
@@ -28,13 +28,13 @@
 
 ```
 # Global installation via npm
-npm install -g PolyClaw
+npm install -g polyclaw
 
 # Or via pnpm
-pnpm add -g PolyClaw
+pnpm add -g polyclaw
 
-git clone [https://github.com/FolatheDuckofDuckingburg/PolyClaw.git](https://github.com/FolatheDuckofDuckingburg /PolyClaw.git)
-cd PolyClaw
+git clone [https://github.com/FolatheDuckofDuckingburg/polyclaw.git](https://github.com/FolatheDuckofDuckingburg/polyclaw.git)
+cd polyclaw
 pnpm install
 pnpm build
 npm link
@@ -115,5 +115,5 @@ polyclaw --provider deepseek --model deepseek-coder "Fix failing unit tests in t
 -----
 ## 📄 License
 
-PolyClaw is released under the MIT License.
+polyclaw is released under the MIT License.
 
