@@ -9,12 +9,12 @@ export async function runAgent(prompt: string, config: ProviderConfig): Promise<
 
   const result = streamText({
     model,
-    system: 'You are PolyClaw, an autonomous terminal agent.',
+    system: 'You are PolyClaw, a model-agnostic CLI coding agent. Execute tools responsibly.',
     prompt,
-    maxSteps: config.maxSteps || 5,
+    maxSteps: config.maxSteps || 10,
     tools: {
       runShell: tool({
-        description: 'Execute shell commands in the workspace',
+        description: 'Execute terminal shell commands securely in the user workspace',
         parameters: z.object({ command: z.string() }),
         execute: async ({ command }) => {
           try {
