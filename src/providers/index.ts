@@ -1,55 +1,30 @@
-import { createAnthropic } from '@ai-sdk/anthropic';
-import { createOpenAI } from '@ai-sdk/openai';
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
+import { anthropic as anthropicProvider } from '@ai-sdk/anthropic';
+import { google } from '@ai-sdk/google';
 import { createOllama } from 'ollama-ai-provider';
+import { ProviderConfig } from '../types.js';
 import { LanguageModel } from 'ai';
-import { ProviderConfig, ProviderType } from '../types.js';
-
-import { ProviderConfig, ProviderType } from '../types.js';
-
-export { ProviderConfig, ProviderType };
 
 export function getLanguageModel(config: ProviderConfig): LanguageModel {
-  const { provider, modelName, apiKey, baseUrl } = config;
-
-  switch (provider) {
-    case 'anthropic': {
-      const anthropic = createAnthropic({
-        apiKey: apiKey || process.env.ANTHROPIC_API_KEY,
+  switch (config.provider) {
+    case 'openai':
+      return openai(config.model);
+    case 'anthropic':
+      return anthropicProvider(config.model);
+    case 'gemini':
+      return google(config.model);
+    case 'deepseek':
+      // DeepSeek is OpenAI-compatible; route through custom base URL if direct provider isn't loaded
+      return openai(config.model, {
+        baseURL: config.baseUrl || 'https://deepseek.com',
       });
-      return anthropic(modelName || 'claude-3-5-sonnet-20241022');
-    }
-
-    case 'openai': {
-      const openai = createOpenAI({
-        apiKey: apiKey || process.env.OPENAI_API_KEY,
-      });
-      return openai(modelName || 'gpt-4o');
-    }
-
-    case 'deepseek': {
-      const deepseek = createOpenAI({
-        apiKey: apiKey || process.env.DEEPSEEK_API_KEY,
-        baseURL: baseUrl || 'https://api.deepseek.com/v1',
-      });
-      return deepseek(modelName || 'deepseek-coder');
-    }
-
-    case 'gemini': {
-      const google = createGoogleGenerativeAI({
-        apiKey: apiKey || process.env.GEMINI_API_KEY,
-      });
-      return google(modelName || 'gemini-1.5-pro');
-    }
-
     case 'ollama': {
       const ollama = createOllama({
-        baseURL: baseUrl || process.env.OLLAMA_HOST || 'http://localhost:11434/api',
+        baseURL: config.baseUrl || 'http://localhost:11434/api',
       });
-      return ollama(modelName || 'deepseek-r1:8b');
+      return ollama(config.model);
     }
-
     default:
-      throw new Error(`Unsupported provider: ${provider}`);
+      throw new Error(`Unsupported LLM provider: ${config.provider}`);
   }
 }
