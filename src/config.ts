@@ -1,39 +1,28 @@
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
-import { ProviderConfig, ProviderType } from './providers';
+import { ProviderConfig } from './types.js';
 
-const CONFIG_PATH = path.join(os.homedir(), '.polyclawrc.json');
+const CONFIG_FILE = path.join(os.homedir(), '.PolyClawrc.json');
 
-export function loadConfig(cliOptions: Partial<ProviderConfig> = {}): ProviderConfig {
-  let fileConfig: any = {};
-
-  if (fs.existsSync(CONFIG_PATH)) {
-    try {
-      fileConfig = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'));
-    } catch (e) {
-      console.warn('Failed to parse ~/.polyclawrc.json, falling back to env/defaults');
-    }
+export async function loadConfig(): Promise<ProviderConfig> {
+  try {
+    const data = await fs.readFile(CONFIG_FILE, 'utf-8');
+    const parsed = JSON.parse(data);
+    
+    return {
+      provider: parsed.defaultProvider || (process.env.PolyClaw_PROVIDER as any) || 'ollama',
+      model: parsed.providers?.[parsed.defaultProvider]?.defaultModel || process.env.PolyClaw_MODEL || 'deepseek-r1:8b',
+      baseUrl: parsed.providers?.[parsed.defaultProvider]?.baseUrl || process.env.OLLAMA_HOST,
+      apiKey: process.env.DEEPSEEK_API_KEY || process.env.OPENAI_API_KEY || process.env.GEMINI_API_KEY || process.env.ANTHROPIC_API_KEY
+    };
+  } catch {
+    // Graceful fallback to default environmental workspace targets if config profile does not exist
+    return {
+      provider: (process.env.PolyClaw_PROVIDER as any) || 'ollama',
+      model: process.env.PolyClaw_MODEL || 'deepseek-r1:8b',
+      baseUrl: process.env.OLLAMA_HOST || 'http://localhost:11434',
+      apiKey: process.env.DEEPSEEK_API_KEY || process.env.OPENAI_API_KEY || process.env.GEMINI_API_KEY || process.env.ANTHROPIC_API_KEY
+    };
   }
-
-  const provider = (
-    cliOptions.provider ||
-    process.env.POLYCLAW_PROVIDER ||
-    fileConfig.defaultProvider ||
-    'ollama'
-  ) as ProviderType;
-
-  const modelName = (
-    cliOptions.modelName ||
-    process.env.POLYCLAW_MODEL ||
-    fileConfig.providers?.[provider]?.defaultModel ||
-    ''
-  );
-
-  return {
-    provider,
-    modelName,
-    baseUrl: cliOptions.baseUrl || fileConfig.providers?.[provider]?.baseUrl,
-    apiKey: cliOptions.apiKey,
-  };
 }
