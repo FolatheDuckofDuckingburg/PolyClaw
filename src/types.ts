@@ -1,18 +1,11 @@
-export type ProviderType = 'anthropic' | 'openai' | 'deepseek' | 'gemini' | 'ollama';
+import { LanguageModel } from 'ai';
+
+export type ProviderType = 'ollama' | 'deepseek' | 'openai' | 'gemini' | 'anthropic';
 
 export interface ProviderConfig {
   provider: ProviderType;
-  modelName: string;
+  model: string;
   apiKey?: string;
   baseUrl?: string;
   maxSteps?: number;
-}
-
-export interface PolyClawRc {
-  defaultProvider?: ProviderType;
-  providers?: Partial<Record<ProviderType, {
-    defaultModel?: string;
-    baseUrl?: string;
-    apiKey?: string;
-  }>>;
 }
