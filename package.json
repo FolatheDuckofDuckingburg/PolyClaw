@@ -1,43 +1,38 @@
 {
   "name": "polyclaw-cli",
   "version": "0.1.0",
-  "description": "Model-agnostic autonomous CLI coding agent",
+  "description": "Model-agnostic CLI coding agent driven by Poly",
+  "type": "module",
   "main": "dist/src/core/ClawEngine.js",
-  "types": "dist/src/core/ClawEngine.d.ts",
   "bin": {
     "polyclaw": "./dist/bin/polyclaw.js"
   },
   "scripts": {
     "build": "tsc",
-    "start": "tsc && node dist/bin/polyclaw.js",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "start": "node dist/bin/polyclaw.js"
   },
   "keywords": [
     "cli",
     "agent",
     "ai",
-    "llm",
+    "copilot",
     "ollama",
-    "deepseek",
-    "anthropic",
-    "openai"
+    "deepseek"
   ],
   "author": "Folarera Kassim",
   "license": "MIT",
   "dependencies": {
-    "@ai-sdk/anthropic": "^1.1.0",
-    "@ai-sdk/google": "^1.1.0",
-    "@ai-sdk/openai": "^1.1.0",
-    "ai": "^4.1.0",
-    "commander": "^13.1.0",
-    "diff": "^7.0.0",
-    "execa": "^9.5.0",
-    "ollama-ai-provider": "^1.2.0",
-    "zod": "^3.24.0"
+    "@ai-sdk/google": "^0.0.53",
+    "@ai-sdk/openai": "^0.0.56",
+    "@ai-sdk/anthropic": "^0.0.54",
+    "ai": "^3.3.37",
+    "commander": "^11.1.0",
+    "execa": "^8.0.1",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/diff": "^7.0.0",
-    "@types/node": "^22.10.0",
-    "typescript": "^5.7.0"
+    "@types/node": "^18.19.0",
+    "typescript": "^5.2.2"
   }
 }
