@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PolyClaw — The Model-Agnostic CLI Code Assistant powered by Poly</title>
+  <script src="https://tailwindcss.com"></script>
+  <style>
+    @import url('https://googleapis.com');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b0c10; color: #f3f4f6; }
+    .heading-font { font-family: 'Space Grotesk', sans-serif; }
+    .code-font { font-family: 'Fira Code', monospace; }
+  </style>
+</head>
+<body class="overflow-x-hidden selection:bg-red-500 selection:text-white">
+
+  <!-- NAVIGATION HEADER -->
+  <header class="border-b border-zinc-900 bg-[#0b0c10]/80 backdrop-blur-md sticky top-0 z-50 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <div class="flex items-center gap-3 group cursor-pointer">
+        <span class="text-3xl transform group-hover:scale-110 transition-transform duration-200">🦀</span>
+        <span class="heading-font text-2xl font-bold tracking-tight text-white">Poly<span class="text-red-500">Claw</span></span>
+      </div>
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
+        <a href="#features" class="hover:text-red-400 transition-colors">Features</a>
+        <a href="#mascot" class="hover:text-red-400 transition-colors">Meet Poly</a>
+        <a href="#terminal" class="hover:text-red-400 transition-colors">Interactive Demo</a>
+        <a href="https://github.com" target="_blank" class="hover:text-white transition-colors flex items-center gap-1">
+          GitHub <span class="text-xs text-zinc-600">(0 stars)</span>
+        </a>
+      </nav>
+      <a href="#terminal" class="bg-red-600 hover:bg-red-500 text-white font-medium text-sm px-5 py-2.5 rounded-lg transition-all shadow-lg shadow-red-900/30">
+        Get Started
+      </a>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="relative pt-24 pb-20 max-w-7xl mx-auto px-6 text-center">
+    <!-- Ambient Radial Glow -->
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-red-900/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+    <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-950/40 border border-red-900/50 text-xs font-semibold tracking-wide text-red-400 heading-font mb-6 animate-pulse">
+      🚀 100% OPEN SOURCE & VENDOR AGNOSTIC
+    </span>
+    
+    <h1 class="heading-font text-5xl md:text-7xl font-bold tracking-tight max-w-4xl mx-auto leading-[1.1] text-white">
+      The open code assistant that queries <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-400">any LLM model</span> on your machine.
+    </h1>
+    
+    <p class="mt-6 text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto font-normal leading-relaxed">
+      PolyClaw breaks vendor lock-in. Route execution tasks seamlessly between local Ollama weights, DeepSeek, or Cloud APIs right from your terminal interface.
+    </p>
+
+    <div class="mt-10 flex flex-wrap justify-center items-center gap-4">
+      <a href="#terminal" class="bg-red-600 hover:bg-red-500 text-white font-semibold px-8 py-4 rounded-xl transition-all shadow-xl shadow-red-900/40 text-base">
+        Launch PolyClaw REPL
+      </a>
+      <a href="https://github.com" target="_blank" class="bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white font-semibold px-8 py-4 rounded-xl transition-all text-base flex items-center gap-2">
+        Clone Repository
+      </a>
+    </div>
+
+    <!-- METRICS STRIP -->
+    <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 border-y border-zinc-900 py-10 max-w-5xl mx-auto text-left">
+      <div>
+        <p class="text-3xl md:text-4xl font-bold text-white heading-font">100%</p>
+        <p class="text-sm text-zinc-500 mt-1">On-Device Execution Option</p>
+      </div>
+      <div>
+        <p class="text-3xl md:text-4xl font-bold text-white heading-font">Any Model</p>
+        <p class="text-sm text-zinc-500 mt-1">DeepSeek, Ollama, Claude, Gemini</p>
+      </div>
+      <div>
+        <p class="text-3xl md:text-4xl font-bold text-white heading-font">0ms</p>
+        <p class="text-sm text-zinc-500 mt-1">External Telemetry Sent</p>
+      </div>
+      <div>
+        <p class="text-3xl md:text-4xl font-bold text-white heading-font">MIT</p>
+        <p class="text-sm text-zinc-500 mt-1">Fully Free Open Core License</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="border-zinc-900">
+
+  <!-- THE INTERACTIVE TERMINAL COMPONENT -->
+  <section id="terminal" class="py-20 max-w-6xl mx-auto px-6">
+    <div class="text-center mb-12">
+      <h2 class="heading-font text-3xl md:text-4xl font-bold text-white">Watch Poly scuttle your code</h2>
+      <p class="text-zinc-400 mt-2">Clean, red crab-themed execution traces detailing continuous tool execution bounds.</p>
+    </div>
+
+    <!-- TERMINAL WRAPPER -->
+    <div class="bg-zinc-950 border border-red-900/30 rounded-2xl shadow-2xl overflow-hidden shadow-red-950/20 max-w-4xl mx-auto">
+      <!-- Title bar -->
+      <div class="bg-zinc-900/50 px-4 py-3 flex items-center justify-between border-b border-zinc-900">
+        <div class="flex items-center gap-2">
+          <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+          <div class="w-3 h-3 rounded-full bg-zinc-700"></div>
+          <div class="w-3 h-3 rounded-full bg-zinc-700"></div>
+        </div>
+        <span class="text-xs text-zinc-500 code-font">polyclaw-cli — interactive session</span>
+        <div class="w-10"></div>
+      </div>
+      
+      <!-- Terminal Console Window Body -->
+      <div class="p-6 code-font text-sm leading-relaxed text-zinc-300 min-h-[380px] overflow-y-auto">
+        <p class="text-red-500 font-bold">    🦀   (🦀)     </p>
+        <p class="text-red-500 font-bold">     \  /       </p>
+        <p class="text-red-500 font-bold">    (oooo)  PolyClaw v0.1.0</p>
+        <p class="text-red-500 font-bold">   / |||| \ </p>
+        <p class="text-red-500 font-bold">  ✂  ~~~~  ✂</p>
+        <br>
+        <p class="text-red-500 font-bold">🦀 PolyClaw — Meet Poly, your red crab dev copilot!</p>
+        <p class="text-zinc-500">Engine: ollama | Active Model: deepseek-r1:8b</p>
+        <p class="text-zinc-500">Type 'exit' to let Poly rest.</p>
+        <p class="text-red-600">------------------------------------------------------------</p>
+        
+        <div class="mt-4">
+          <span class="text-red-500 font-bold">Poly 🦀 &gt;</span> <span class="text-white">Refactor src/utils.ts to handle asynchronous task retry loops</span>
+        </div>
+        
+        <p class="text-zinc-500 mt-2">🦂 Poly is scuttling through your codebase...</p>
+        <p class="text-red-600">------------------------------------------------------------</p>
+        
+        <p class="text-red-400 mt-2 font-medium">✂️  [Poly Snip] Executing: readFile</p>
+        <p class="text-zinc-500">Arguments: { "filePath": "src/utils.ts" }</p>
+        
+        <p class="text-zinc-400 mt-4">
+          Streamed Output: <span class="text-zinc-200">Exporting custom async retry wrappers. Poly successfully injected structural resilience limits onto file parameters.</span>
+        </p>
+        
+        <p class="text-red-600 mt-4">------------------------------------------------------------</p>
+        <div class="mt-4 flex items-center">
+          <span class="text-red-500 font-bold animate-pulse">Poly 🦀 &gt;</span>
+          <span class="w-2 h-4 bg-zinc-400 ml-1 animate-ping"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES CORE GRID -->
+  <section id="features" class="bg-zinc-950/40 border-t border-zinc-900 py-24">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="heading-font text-3xl md:text-5xl font-bold text-white tracking-tight">Built for absolute local control.</h2>
+        <p class="text-zinc-400 mt-4 text-base">PolyClaw delivers modern multi-model routing capabilities mapped straight onto high-performance shell tools.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Feature Item 1 -->
+        <div class="bg-[#0b0c10] border border-zinc-900 p-8 rounded-2xl hover:border-red-900/40 transition-all duration-300 group">
+          <div class="w-12 h-12 rounded-xl bg-red-950/50 border border-red-900/30 flex items-center justify-center text-xl group-hover:scale-110 transition-transform duration-200">⚡</div>
+          <h3 class="heading-font text-xl font-bold text-white mt-6">Multi-Model Pipelines</h3>
+          <p class="text-zinc-400 mt-2 text-sm leading-relaxed">Swap intelligence engines on-the-fly. Choose low-latency local execution formats or high-parameter deep reasoning endpoints depending on current system load structures.</p>
+        </div>
+
+        <!-- Feature Item 2 -->
+        <div class="bg-[#0b0c10] border border-zinc-900 p-8 rounded-2xl hover:border-red-900/40 transition-all duration-300 group">
+          <div class="w-12 h-12 rounded-xl bg-red-950/50 border border-red-900/30 flex items-center justify-center text-xl group-hover:scale-110 transition-transform duration-200">✂️</div>
+          <h3 class="heading-font text-xl font-bold text-white mt-6">Poly Snip Mechanics</h3>
+          <p class="text-zinc-400 mt-2 text-sm leading-relaxed">Poly hooks directly into the secure Vercel AI SDK lifecycle, executing shell checks, script compilation, and structural code refactoring processes step-by-step.</p>
+        </div>
+
+        <!-- Feature Item 3 -->
+        <div class="bg-[#0b0c10] border border-zinc-900 p-8 rounded-2xl hover:border-red-900/40 transition-all duration-300 group">
+          <div class="w-12 h-12 rounded-xl bg-red-950/50 border border-red-900/30 flex items-center justify-center text-xl group-hover:scale-110 transition-transform duration-200">🔒</div>
+          <h3 class="heading-font text-xl font-bold text-white mt-6">Zero Telemetry & Air-Gapped</h3>
+          <p class="text-zinc-400 mt-2 text-sm leading-relaxed">Your IP, file structure, and source code never leave your machine. Route requests exclusively through local network bindings for total privacy compliance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEET POLY MASCOT SECTION -->
+  <section id="mascot" class="py-24 max-w-7xl mx-auto px-6 relative">
+    <div class="bg-gradient-to-br from-red-950/20 via-zinc-950 to-[#0b0c10] border border-red-900/30 rounded-3xl p-8 md:p-12 overflow-hidden relative">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div>
+          <span class="text-red-500 font-bold heading-font text-sm uppercase tracking-wider">Meet the Mascot</span>
+          <h2 class="heading-font text-3xl md:text-5xl font-bold text-white mt-2">Poly the Red Crab</h2>
+          <p class="text-zinc-400 mt-4 leading-relaxed">
+            Poly is your tireless, terminal-bound copilot. Equipped with sharp claws for surgical code edits and a protective shell built on local privacy, Poly scuttles through complex codebases so you don't have to.
+          </p>
+          
+          <ul class="mt-6 space-y-3 text-sm text-zinc-300">
+            <li class="flex items-center gap-3">
+              <span class="text-red-500">🦀</span>
+              <span><strong>Snip & Splice:</strong> Precise file-level modification with continuous undo history</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <span class="text-red-500">🦀</span>
+              <span><strong>Hardened Shell:</strong> Built-in execution sandbox to prevent destructive shell commands</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <span class="text-red-500">🦀</span>
+              <span><strong>Adaptive Intelligence:</strong> Dynamically routes simple queries to light models and complex bugs to heavy thinkers</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-zinc-950 border border-zinc-900 rounded-2xl p-8 text-center relative group">
+          <div class="text-8xl md:text-9xl mb-4 transform group-hover:rotate-6 group-hover:scale-105 transition-all duration-300">🦀</div>
+          <div class="code-font text-xs text-red-400 bg-red-950/60 border border-red-900/40 rounded-lg p-4 text-left shadow-inner">
+            <p class="text-zinc-500">// Poly status check</p>
+            <p><span class="text-red-500">const</span> poly = <span class="text-orange-400">new</span> PolyClaw({</p>
+            <p class="pl-4">mode: <span class="text-emerald-400">'model-agnostic'</span>,</p>
+            <p class="pl-4">airGapped: <span class="text-amber-400">true</span>,</p>
+            <p class="pl-4">clawsSharp: <span class="text-amber-400">true</span></p>
+            <p>});</p>
+            <p class="mt-2 text-zinc-400">poly.<span class="text-blue-400">scuttle</span>(); <span class="text-zinc-500">// Ready for action</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUICKSTART CTA SECTION -->
+  <section class="py-20 max-w-5xl mx-auto px-6 text-center">
+    <div class="bg-gradient-to-r from-red-950/40 via-red-900/20 to-red-950/40 border border-red-900/40 rounded-3xl p-10 md:p-16 shadow-2xl">
+      <h2 class="heading-font text-3xl md:text-5xl font-bold text-white">Unleash the crab on your workflow</h2>
+      <p class="text-zinc-400 mt-4 max-w-xl mx-auto">Get started with PolyClaw in seconds via npx or homebrew. Zero setup required for local Ollama instances.</p>
+      
+      <div class="mt-8 bg-zinc-950 border border-zinc-800 rounded-xl p-4 max-w-md mx-auto code-font text-sm flex items-center justify-between text-zinc-300">
+        <span class="text-red-400">$ <span class="text-white">npm install -g polyclaw-cli</span></span>
+        <button onclick="navigator.clipboard.writeText('npm install -g polyclaw-cli')" class="text-xs bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 px-3 py-1.5 rounded transition-colors">
+          Copy
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-zinc-900 bg-[#07080a] py-12 text-zinc-500 text-sm">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">🦀</span>
+        <span class="heading-font font-bold text-white">PolyClaw</span>
+        <span>— Released under the MIT License</span>
+      </div>
+      <div class="flex gap-6">
+        <a href="#features" class="hover:text-zinc-300 transition-colors">Features</a>
+        <a href="#mascot" class="hover:text-zinc-300 transition-colors">Mascot</a>
+        <a href="#terminal" class="hover:text-zinc-300 transition-colors">Demo</a>
+        <a href="https://github.com" target="_blank" class="hover:text-zinc-300 transition-colors">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
