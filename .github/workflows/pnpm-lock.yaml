@@ -1,0 +1,13 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+  .:
+    dependencies: {}
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.3.3
