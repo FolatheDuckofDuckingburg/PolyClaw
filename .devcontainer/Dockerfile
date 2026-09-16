@@ -79,9 +79,9 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
   -x
 
 # Install PolyClaw
-RUN npm install -g @anthropic-ai/polyclaw@${CLAUDE_CODE_VERSION}
+RUN npm install -g @folatheduckofduckingburg/PolyClaw@${POLYCLAW_VERSION}
 # Install polyclaw
-RUN npm install -g @FolatheDuckofDuckingburg/polyclaw@${POLYCLAW_VERSION}
+RUN npm install -g @folatheduckofduckingburg/PolyClaw@${POLYCLAW_VERSION}
 
 
 # Copy and set up firewall script

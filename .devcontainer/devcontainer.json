@@ -4,7 +4,7 @@
   "build": {
     "dockerfile": "Dockerfile",
     "args": {
-      "TZ": "${localEnv:TZ:America/Los_Angeles}",
+      "TZ": "${localEnv:TZ:America/South_Carolina}",
       "POLYCLAW_VERSION": "latest",
       "GIT_DELTA_VERSION": "0.18.2",
       "ZSH_IN_DOCKER_VERSION": "1.2.0"
@@ -17,7 +17,7 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "anthropic.polyclaw",
+        "FolatheDuckofDuckingburg.PolyClaw",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "eamodio.gitlens"

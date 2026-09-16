@@ -9,12 +9,12 @@ import { ProviderType } from '../src/types.js';
 const program = new Command();
 
 program
-  .name('polyclaw')
+  .name('PolyClaw')
   .description('Model-agnostic autonomous CLI coding agent')
   .version('0.1.0');
 
 program
-  .argument('[prompt...]', 'Task or prompt for PolyClaw to execute')
+  .argument('[prompt...]', 'Task or prompt for Poly to execute')
   .option('-p, --provider <provider>', 'LLM provider (anthropic, openai, deepseek, gemini, ollama)')
   .option('-m, --model <model>', 'Model identifier')
   .option('-k, --api-key <key>', 'API key override')
