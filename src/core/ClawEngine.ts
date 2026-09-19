@@ -4,8 +4,18 @@ import { createOpenAI } from '@ai-sdk/openai';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { createOllama } from 'ollama-ai-provider';
 import { z } from 'zod';
-import execa from 'execa';
+import { execaCommand } from 'execa';
 import fs from 'fs/promises';
+import { runAgent } from '../agent.js';
+import { ProviderConfig } from '../types.js';
+
+export class ClawEngine {
+  constructor(public config: ProviderConfig) {}
+
+  async execute(prompt: string): Promise<void> {
+    await executeAgent(prompt, this.config.provider, this.config.modelName);
+  }
+}
 
 // 1. Dynamic Provider Resolver
 export function getProviderModel(provider: string, modelName: string) {
@@ -48,7 +58,7 @@ export async function executeAgent(prompt: string, provider: string, modelName: 
         parameters: z.object({ command: z.string() }),
         execute: async ({ command }) => {
           try {
-            const { stdout, stderr } = await execa.command(command, { shell: true });
+            const { stdout, stderr } = await execaCommand(command, { shell: true });
             return { stdout, stderr, exitCode: 0 };
           } catch (err: any) {
             return { error: err.message, exitCode: err.exitCode || 1 };

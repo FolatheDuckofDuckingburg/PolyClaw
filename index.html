@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PolyClaw - Autonomous CLI Coding Agent</title>
+  <meta name="description" content="Model-agnostic autonomous CLI coding agent for local and cloud LLMs.">
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-color: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --border-color: #334155;
+      --term-bg: #090d16;
+      --term-prompt: #4ade80;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      margin-left: 1.5rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    nav a:hover, nav a:focus {
+      color: var(--text-color);
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    /* Terminal UI */
+    .terminal-container {
+      background-color: var(--term-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+      margin: 2rem auto;
+      max-width: 850px;
+      text-align: left;
+    }
+
+    .terminal-header {
+      background-color: #1e293b;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .dot-red { background-color: #ef4444; }
+    .dot-yellow { background-color: #eab308; }
+    .dot-green { background-color: #22c55e; }
+
+    .terminal-title {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      font-family: monospace;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .terminal-body {
+      padding: 1.25rem;
+      font-family: 'Fira Code', Consolas, Monaco, 'Courier New', monospace;
+      font-size: 0.95rem;
+      min-height: 320px;
+      max-height: 480px;
+      overflow-y: auto;
+      color: #e2e8f0;
+    }
+
+    .terminal-output {
+      white-space: pre-wrap;
+      margin-bottom: 1rem;
+    }
+
+    .terminal-form {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .terminal-prompt-symbol {
+      color: var(--term-prompt);
+      font-weight: bold;
+    }
+
+    .terminal-input {
+      background: transparent;
+      border: none;
+      color: #f8fafc;
+      font-family: inherit;
+      font-size: inherit;
+      flex: 1;
+      outline: none;
+    }
+
+    /* Features Grid */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 4rem;
+    }
+
+    .feature-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1.25rem;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-muted);
+      margin-top: 4rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header role="banner">
+    <a href="#" class="logo" aria-label="PolyClaw Home">
+      <span>🦀</span> PolyClaw
+    </a>
+    <nav role="navigation" aria-label="Main Navigation">
+      <a href="#demo">Live Terminal</a>
+      <a href="#features">Features</a>
+      <a href="https://github.com/FolatheDuckofDuckingburg/PolyClaw" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Autonomous CLI Coding Agent</h1>
+      <p>Model-agnostic task execution across local models (Ollama/DeepSeek) and cloud LLMs (Anthropic, OpenAI, Gemini).</p>
+    </section>
+
+    <!-- Terminal UI -->
+    <section id="demo" aria-label="Interactive Terminal UI Demo">
+      <div class="terminal-container" role="region" aria-label="PolyClaw Web Terminal Emulator">
+        <div class="terminal-header">
+          <span class="dot dot-red" aria-hidden="true"></span>
+          <span class="dot dot-yellow" aria-hidden="true"></span>
+          <span class="dot dot-green" aria-hidden="true"></span>
+          <span class="terminal-title">polyclaw — bash — 80x24</span>
+        </div>
+        <div class="terminal-body" id="terminal-body">
+          <div class="terminal-output" id="terminal-output" aria-live="polite">
+┌──────────────────────────────────────────┐
+│ 🦀  PolyClaw - AI Terminal Coding Agent  │
+└──────────────────────────────────────────┘
+Type "help" or "?" for commands, "exit" or "quit" to leave.
+          </div>
+          <form class="terminal-form" id="terminal-form" action="javascript:void(0);">
+            <label for="terminal-input" class="terminal-prompt-symbol" aria-label="Terminal Prompt">polyclaw ❯</label>
+            <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" placeholder="Type 'help' or enter a task..." aria-label="Terminal command input">
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features" aria-label="PolyClaw Features">
+      <div class="feature-card">
+        <h3>⚡ Model Agnostic</h3>
+        <p>Switch seamlessly between Anthropic Claude, OpenAI, DeepSeek, Gemini, or local open-weights with Ollama.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🛠️ Autonomous Execution</h3>
+        <p>Multi-step agent loop capable of reading files, writing code, and executing terminal commands safely.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🔒 Local & Private</h3>
+        <p>Run entirely offline with zero data leaving your machine using local LLM backends.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer role="contentinfo">
+    <p>Released under the MIT License — PolyClaw Project</p>
+  </footer>
+
+  <script>
+    const termOutput = document.getElementById('terminal-output');
+    const termInput = document.getElementById('terminal-input');
+    const termForm = document.getElementById('terminal-form');
+    const termBody = document.getElementById('terminal-body');
+
+    termForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const inputVal = termInput.value.trim();
+      if (!inputVal) return;
+
+      termOutput.textContent += '\npolyclaw ❯ ' + inputVal;
+      termInput.value = '';
+
+      const lower = inputVal.toLowerCase();
+
+      if (lower === 'clear') {
+        termOutput.textContent = '';
+      } else if (lower === 'help' || lower === '?') {
+        termOutput.textContent += `\n
+┌────────────────────────────────────────────────┐
+│ PolyClaw REPL Commands                         │
+├──────────────┬─────────────────────────────────┤
+│ help, ?      │ Display available REPL commands │
+│ clear        │ Clear the terminal screen       │
+│ exit, quit   │ Exit PolyClaw interactive REPL │
+└──────────────┴─────────────────────────────────┘
+Or type any prompt to execute a task with PolyClaw.`;
+      } else if (lower === 'exit' || lower === 'quit') {
+        termOutput.textContent += '\n[PolyClaw session ended]';
+      } else {
+        termOutput.textContent += `\n🤖 PolyClaw Agent: Analyzing task "${inputVal}"...
+✔ Checked workspace context
+✔ Executed shell inspection
+✔ Finished task successfully.`;
+      }
+
+      termBody.scrollTop = termBody.scrollHeight;
+    });
+  </script>
+</body>
+</html>
