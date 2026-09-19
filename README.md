@@ -30,17 +30,17 @@
 
 ### Global Installation via package managers
 
-```bash
+```
 # Install via npm globally
-npm install -g polyclaw
+npm install -g polyclaw-cli
 
 # Or install via pnpm
-pnpm add -g polyclaw
+pnpm add -g polyclaw-cli
 ```
 
 ### Building from Source
 
-```bash
+```
 # Clone the repository
 git clone https://github.com/FolatheDuckofDuckingburg/PolyClaw.git
 cd PolyClaw
@@ -62,21 +62,21 @@ PolyClaw looks for credentials and routing preferences via environment variables
 ### 1. Environment Variable Setup
 
 #### Local Models via Ollama (Free, Private & Fully Offline)
-```bash
+```
 export PolyClaw_PROVIDER=ollama
 export PolyClaw_MODEL=deepseek-r1:8b
 export OLLAMA_HOST=http://localhost:11434
 ```
 
 #### DeepSeek API (Cloud Inference)
-```bash
+```
 export PolyClaw_PROVIDER=deepseek
 export PolyClaw_MODEL=deepseek-coder
 export DEEPSEEK_API_KEY=your_key_here
 ```
 
 #### Alternative Cloud Providers
-```bash
+```
 # OpenAI
 export PolyClaw_PROVIDER=openai
 export PolyClaw_MODEL=gpt-4o
@@ -97,7 +97,7 @@ export ANTHROPIC_API_KEY=your_key_here
 
 Avoid managing temporary terminal variables by persisting your settings directly:
 
-```json
+```
 {
   "defaultProvider": "ollama",
   "providers": {
@@ -125,7 +125,7 @@ Avoid managing temporary terminal variables by persisting your settings directly
 
 ## 🚀 Usage Examples
 
-```bash
+```
 # Initialize an interactive REPL terminal session
 PolyClaw
 
