@@ -16,7 +16,7 @@ export function getLanguageModel(config: ProviderConfig): LanguageModel {
     case 'deepseek': {
       // ✅ Correct way to configure custom OpenAI-compatible endpoints:
       const customOpenAI = createOpenAI({
-        baseUrl: config.baseUrl || 'https://deepseek.com',
+        baseURL: config.baseUrl || 'https://api.deepseek.com',
         apiKey: config.apiKey,
       });
       return customOpenAI(config.model);
