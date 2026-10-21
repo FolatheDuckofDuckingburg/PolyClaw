@@ -11,8 +11,15 @@ export class ClawEngine {
     this.config = config;
   }
 
+  get provider(): string {
+    return this.config.provider;
+  }
+
+  get model(): string {
+    return this.config.model;
+  }
+
   async execute(prompt: string): Promise<void> {
-    // Synchronize current saved knowledge maps onto disk
     await initializeGraph();
 
     const model = getLanguageModel(this.config);
