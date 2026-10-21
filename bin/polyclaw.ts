@@ -9,7 +9,7 @@ import { ProviderType } from '../src/types.js';
 const program = new Command();
 
 program
-  .name('PolyClaw')
+  .name('polyclaw')
   .description('Model-agnostic autonomous CLI coding agent')
   .version('0.1.0');
 
@@ -21,26 +21,29 @@ program
   .option('-u, --base-url <url>', 'Endpoint base URL override')
   .option('-s, --max-steps <number>', 'Maximum execution loop steps', parseInt)
   .action(async (promptParts: string[], options) => {
-    const config = loadConfig({
-      provider: options.provider as ProviderType,
-      modelName: options.model,
-      apiKey: options.apiKey,
-      baseUrl: options.baseUrl,
-      maxSteps: options.maxSteps,
-    });
-
-    const engine = new ClawEngine(config);
-    const prompt = promptParts.join(' ').trim();
-
     try {
+      const savedConfig = await loadConfig();
+      const config = {
+        ...savedConfig,
+        provider: (options.provider ?? savedConfig.provider) as ProviderType,
+        model: options.model ?? savedConfig.model,
+        apiKey: options.apiKey ?? savedConfig.apiKey,
+        baseUrl: options.baseUrl ?? savedConfig.baseUrl,
+        maxSteps: options.maxSteps ?? savedConfig.maxSteps,
+      };
+
+      const engine = new ClawEngine(config);
+      const prompt = promptParts.join(' ').trim();
+
       if (prompt) {
         await engine.execute(prompt);
       } else {
-        await startRepl(engine);
+        startRepl(engine);
       }
-    } catch (err: any) {
-      console.error(`\nPolyClaw Error: ${err.message}`);
-      process.exit(1);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.error(`\nPolyClaw Error: ${message}`);
+      process.exitCode = 1;
     }
   });
 
