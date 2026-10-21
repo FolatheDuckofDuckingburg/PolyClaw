@@ -1,6 +1,5 @@
 import readline from 'readline';
 import { ClawEngine } from '../core/ClawEngine.js';
-import { ProviderConfig } from '../types.js';
 
 const COLORS = {
   reset: '\x1b[0m',
@@ -14,20 +13,19 @@ const COLORS = {
 
 const UI = {
   divider: () => console.log(`${COLORS.red}${'-'.repeat(process.stdout.columns || 60)}${COLORS.reset}`),
-  
-  header: (config: ProviderConfig) => {
+
+  header: (provider: string, model: string) => {
     console.clear();
-    // Poly's ASCII Art boot splash
     console.log(`${COLORS.boldRed}`);
     console.log(`    🦀   (🦀)     `);
-    console.log(`     \\  /       `);
+    console.log(`     \\\\  /       `);
     console.log(`    (oooo)  PolyClaw v0.1.0`);
-    console.log(`   / |||| \\ `);
+    console.log(`   / |||| \\\\ `);
     console.log(`  ✂  ~~~~  ✂`);
     console.log(`${COLORS.reset}`);
-    
+
     console.log(`${COLORS.boldRed}🦀 PolyClaw — Meet Poly, your red crab dev copilot!${COLORS.reset}`);
-    console.log(`${COLORS.dim}Engine: ${config.provider} | Model: ${config.model}${COLORS.reset}`);
+    console.log(`${COLORS.dim}Engine: ${provider} | Model: ${model}${COLORS.reset}`);
     console.log(`${COLORS.dim}Type 'exit' to let Poly rest.${COLORS.reset}`);
     UI.divider();
   },
@@ -35,18 +33,11 @@ const UI = {
   logAction: (message: string) => {
     console.log(`${COLORS.dim}🦀 Poly is ${message}...${COLORS.reset}`);
   },
-
-  logTool: (name: string, params: object) => {
-    console.log(`\n${COLORS.brightRed}✂️  [Poly Snip] Executing: ${COLORS.bold}${name}${COLORS.reset}`);
-    console.log(`${COLORS.dim}Arguments: ${JSON.stringify(params)}${COLORS.reset}`);
-  }
 };
 
-export function startRepl(config: ProviderConfig) {
-  const engine = new ClawEngine(config);
-  
-  UI.header(config);
-  
+export function startRepl(engine: ClawEngine): void {
+  UI.header(engine['config'].provider, engine['config'].model);
+
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -57,7 +48,7 @@ export function startRepl(config: ProviderConfig) {
 
   rl.on('line', async (line) => {
     const input = line.trim();
-    
+
     if (input.toLowerCase() === 'exit' || input.toLowerCase() === 'quit') {
       rl.close();
       return;
@@ -67,20 +58,19 @@ export function startRepl(config: ProviderConfig) {
       try {
         UI.divider();
         UI.logAction('scuttling through your codebase');
-        
         await engine.execute(input);
-        
-        console.log(); // Final pad line completion
+        console.log();
         UI.divider();
-      } catch (err: any) {
-        console.error(`\n${COLORS.boldRed}⚠️ Poly snapped a claw! Error: ${err.message}${COLORS.reset}`);
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err);
+        console.error(`\n${COLORS.boldRed}⚠️ Poly snapped a claw! Error: ${message}${COLORS.reset}`);
         UI.divider();
       }
     }
 
     rl.prompt();
   }).on('close', () => {
-    console.log(`\n${COLORS.red}Poly scuttled away into the sand. Configuration saved.${COLORS.reset}\n`);
+    console.log(`\n${COLORS.red}Poly scuttled away into the sand.\${COLORS.reset}\n`);
     process.exit(0);
   });
 }
