@@ -63,14 +63,14 @@ export function startRepl(engine: ClawEngine): void {
         UI.divider();
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : String(err);
-        console.error(`\\n${COLORS.boldRed}⚠️ Poly snapped a claw! Error: ${message}${COLORS.reset}`);
+        console.error(`\n${COLORS.boldRed}⚠️ Poly snapped a claw! Error: ${message}${COLORS.reset}`);
         UI.divider();
       }
     }
 
     rl.prompt();
   }).on('close', () => {
-    console.log(`\\n${COLORS.red}Poly scuttled away into the sand.${COLORS.reset}\\n`);
+    console.log(`\n${COLORS.red}Poly scuttled away into the sand.${COLORS.reset}\n`);
     process.exit(0);
   });
 }
