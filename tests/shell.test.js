@@ -22,10 +22,14 @@ test('blocks known dangerous executables before requesting approval', async () =
 test('blocks risky Git and npm operations before requesting approval', async (t) => {
   const cases = [
     { command: 'git', args: ['push', 'origin', 'main'] },
+    { command: 'git', args: ['-C', '.', 'push', 'origin', 'main'] },
+    { command: 'git', args: ['--git-dir=.git', 'push', 'origin', 'main'] },
     { command: 'git', args: ['clean', '-fd'] },
     { command: 'git', args: ['clean', '--force'] },
+    { command: 'git', args: ['-C', '.', 'clean', '-fd'] },
     { command: 'npm', args: ['publish'] },
     { command: 'npm', args: ['unpublish', 'some-package'] },
+    { command: 'npm', args: ['--prefix', '.', 'publish'] },
   ];
   for (const item of cases) {
     await t.test(`${item.command} ${item.args.join(' ')}`, async () => {
