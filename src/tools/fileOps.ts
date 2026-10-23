@@ -2,8 +2,15 @@ import { tool } from 'ai';
 import { z } from 'zod';
 import fs from 'fs/promises';
 import path from 'path';
+import { createTwoFilesPatch } from 'diff';
 
 const WORKSPACE_ROOT = path.resolve(process.cwd());
+type FileApprovalHandler = (preview: string) => Promise<boolean>;
+let fileApprovalHandler: FileApprovalHandler | undefined;
+
+export function setFileApprovalHandler(handler: FileApprovalHandler | undefined): void {
+  fileApprovalHandler = handler;
+}
 
 function isWithinWorkspace(candidate: string): boolean {
   const relative = path.relative(WORKSPACE_ROOT, candidate);
@@ -28,8 +35,6 @@ async function resolveWorkspacePath(filePath: string, operation: 'read' | 'write
     return realTarget;
   }
 
-  // Writes require an existing parent directory. Resolve it to prevent a
-  // symlinked directory inside the workspace from redirecting writes outside.
   const realParent = await fs.realpath(path.dirname(candidate));
   if (!isWithinWorkspace(realParent)) {
     throw new Error('Parent directory escapes the current workspace.');
@@ -65,16 +70,55 @@ export const readFile = tool({
 });
 
 export const writeFile = tool({
-  description: 'Write UTF-8 text to a file inside the current project workspace using a relative path',
+  description: 'Propose a UTF-8 file change. PolyClaw shows a diff and requires explicit user approval before writing.',
   parameters: z.object({
     filePath: z.string().min(1).describe('Relative path to a file inside the current workspace'),
-    content: z.string().describe('The full file content payload'),
+    content: z.string().describe('The full proposed file content'),
   }),
   execute: async ({ filePath, content }) => {
     try {
       const safePath = await resolveWorkspacePath(filePath, 'write');
+      let original = '';
+      let isNewFile = false;
+      try {
+        original = await fs.readFile(safePath, 'utf-8');
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+        isNewFile = true;
+      }
+
+      if (original === content && !isNewFile) {
+        return { success: true, changed: false, message: `No changes needed for ${filePath}.` };
+      }
+
+      const diff = createTwoFilesPatch(
+        isNewFile ? '/dev/null' : filePath,
+        filePath,
+        original,
+        content,
+        'current',
+        'proposed',
+      );
+      const preview = diff.length > 12_000 ? `${diff.slice(0, 12_000)}\n... diff truncated ...` : diff;
+
+      if (!fileApprovalHandler) {
+        return {
+          success: false,
+          blocked: true,
+          error: 'Interactive file-change approval is unavailable. Run PolyClaw in its interactive REPL to review and approve edits.',
+          preview,
+        };
+      }
+
+      const approved = await fileApprovalHandler(
+        `Proposed file change: ${filePath}\n\n${preview}\n\nThis writes the full proposed content to the workspace file.`,
+      );
+      if (!approved) {
+        return { success: false, approved: false, message: `User denied the proposed change to ${filePath}.`, preview };
+      }
+
       await fs.writeFile(safePath, content, 'utf-8');
-      return { success: true, message: `Successfully wrote content to ${filePath}` };
+      return { success: true, changed: true, message: `Successfully wrote approved changes to ${filePath}`, preview };
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       return { error: `Failed to write file: ${message}` };

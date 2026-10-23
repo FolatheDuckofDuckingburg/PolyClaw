@@ -13,13 +13,17 @@ PolyClaw's CLI is free and MIT-licensed. Local inference can avoid per-request h
 - **Local-first option:** run a model on your own computer with Ollama.
 - **Provider choice:** Ollama, DeepSeek, OpenAI, Gemini, and Anthropic are supported by the current provider adapter.
 - **Terminal workflow:** give Poly a coding task in one command or use the interactive REPL.
-- **Workspace tools:** read and write text files in the project workspace.
+- **Workspace tools:** read files and review a proposed diff before approving writes.
 - **Approval-gated shell tool:** request permission to run individual executable commands.
 - **Open source:** inspect and modify the project under the MIT License.
 
 ## What it can do today
 
-PolyClaw can interact with a configured model, read and write text files within its working project workspace, use a lightweight knowledge graph for codebase context, and request user approval before running a supported shell command.
+PolyClaw can interact with a configured model, read text files within its working project workspace, preview proposed file changes, request explicit approval before applying them, use a lightweight knowledge graph for codebase context, and request approval before running a supported shell command.
+
+### File-edit approval
+
+Before writing, PolyClaw displays a unified diff and asks for explicit approval. Type `YES` to apply it; any other response denies it. In non-interactive modes without a configured approval handler, file writes fail closed. The preview is truncated for very large changes, so review the target path and proposed content carefully.
 
 ### Shell-command safety: important limitations
 
@@ -28,8 +32,6 @@ PolyClaw can interact with a configured model, read and write text files within 
 - Some executables and operations are blocked by an initial denylist, including common destructive commands, `git push`, and `npm publish`.
 - **This is not a security sandbox.** The denylist is not exhaustive, and an approved executable may still change or delete files, access networks, or perform other consequential actions. Review the exact command and its arguments before approving it. Use PolyClaw only in a workspace where you can tolerate the effects of commands you approve.
 - Shell execution is available only when an interactive approval handler is configured; non-interactive modes without one fail closed.
-
-Features such as automatic per-file model routing, a comprehensive permission system, and end-to-end tests against a live local Ollama instance remain future work. Do not assume every coding task will succeed without supervision.
 
 ## Quick start: local model, no hosted API key
 
@@ -63,7 +65,7 @@ npm test
 node dist/bin/polyclaw.js --provider ollama --model deepseek-r1:8b "Explain the structure of this project"
 ```
 
-Or start the interactive terminal, where approval-gated shell requests can be reviewed:
+Or start the interactive terminal, where shell and file-change requests can be reviewed:
 
 ```sh
 node dist/bin/polyclaw.js --provider ollama --model deepseek-r1:8b
@@ -134,10 +136,9 @@ Use `env:VARIABLE_NAME` to refer to an environment variable rather than putting 
 
 - [x] Provider configuration fixes and automated test workflow
 - [x] Approval-gated shell-command tool with an initial safety policy
-- [ ] Expand command-policy tests and improve workspace boundary enforcement
-- [ ] End-to-end tests against a local Ollama instance
-- [ ] Better patch previews and file-edit diffs
-- [ ] Clear recovery and error reporting
+- [x] Preview diffs and require approval before file writes
+- [x] Provider failure messages with actionable troubleshooting hints
+- [ ] End-to-end tests against a live local Ollama instance in CI
 - [ ] More comprehensive, reviewable tool permissions
 
 ## Contributing
