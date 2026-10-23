@@ -30,7 +30,12 @@ function isBlocked(command: string, args: string[]): string | undefined {
   if (executable === 'npm' && ['publish', 'login', 'logout', 'unpublish'].includes(normalized[0] ?? '')) {
     return `npm ${normalized[0]} is blocked by the initial shell safety policy.`;
   }
-  if (executable === 'git' && normalized[0] === 'clean' && normalized.includes('-f')) {
+  // Git accepts combined short flags (for example, -fd) as well as --force.
+  if (
+    executable === 'git'
+    && normalized[0] === 'clean'
+    && normalized.some((arg) => arg === '--force' || /^-[^-]*f/.test(arg))
+  ) {
     return 'Destructive git clean commands are blocked.';
   }
   return undefined;
