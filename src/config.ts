@@ -1,28 +1,57 @@
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
-import { ProviderConfig } from './types.js';
+import { ProviderConfig, ProviderType } from './types.js';
 
 const CONFIG_FILE = path.join(os.homedir(), '.PolyClawrc.json');
 
-export async function loadConfig(): Promise<ProviderConfig> {
+type ConfigOverrides = Partial<Pick<ProviderConfig, 'provider' | 'model' | 'apiKey' | 'baseUrl' | 'maxSteps'>>;
+
+const API_KEY_ENV: Partial<Record<ProviderType, string>> = {
+  deepseek: 'DEEPSEEK_API_KEY',
+  openai: 'OPENAI_API_KEY',
+  gemini: 'GEMINI_API_KEY',
+  anthropic: 'ANTHROPIC_API_KEY',
+};
+
+function readProfileApiKey(value: unknown): string | undefined {
+  if (typeof value !== 'string' || !value) return undefined;
+  if (value.startsWith('env:')) return process.env[value.slice(4)] || undefined;
+  return value;
+}
+
+export async function loadConfig(overrides: ConfigOverrides = {}): Promise<ProviderConfig> {
+  let parsed: any = {};
   try {
-    const data = await fs.readFile(CONFIG_FILE, 'utf-8');
-    const parsed = JSON.parse(data);
-    
-    return {
-      provider: parsed.defaultProvider || (process.env.PolyClaw_PROVIDER as any) || 'ollama',
-      model: parsed.providers?.[parsed.defaultProvider]?.defaultModel || process.env.PolyClaw_MODEL || 'deepseek-r1:8b',
-      baseUrl: parsed.providers?.[parsed.defaultProvider]?.baseUrl || process.env.OLLAMA_HOST,
-      apiKey: process.env.DEEPSEEK_API_KEY || process.env.OPENAI_API_KEY || process.env.GEMINI_API_KEY || process.env.ANTHROPIC_API_KEY
-    };
+    parsed = JSON.parse(await fs.readFile(CONFIG_FILE, 'utf-8'));
   } catch {
-    // Graceful fallback to default environmental workspace targets if config profile does not exist
-    return {
-      provider: (process.env.PolyClaw_PROVIDER as any) || 'ollama',
-      model: process.env.PolyClaw_MODEL || 'deepseek-r1:8b',
-      baseUrl: process.env.OLLAMA_HOST || 'http://localhost:11434',
-      apiKey: process.env.DEEPSEEK_API_KEY || process.env.OPENAI_API_KEY || process.env.GEMINI_API_KEY || process.env.ANTHROPIC_API_KEY
-    };
+    // A missing or invalid profile falls back to environment variables and defaults.
   }
+
+  const provider = overrides.provider
+    ?? (process.env.PolyClaw_PROVIDER as ProviderType | undefined)
+    ?? parsed.defaultProvider
+    ?? 'ollama';
+  const providerProfile = parsed.providers?.[provider] ?? {};
+  const model = overrides.model
+    ?? process.env.PolyClaw_MODEL
+    ?? providerProfile.defaultModel
+    ?? (provider === 'ollama' ? 'deepseek-r1:8b' : '');
+
+  const apiKeyEnv = API_KEY_ENV[provider];
+  const apiKey = overrides.apiKey
+    ?? readProfileApiKey(providerProfile.apiKey)
+    ?? (apiKeyEnv ? process.env[apiKeyEnv] : undefined);
+
+  const baseUrl = overrides.baseUrl
+    ?? providerProfile.baseUrl
+    ?? (provider === 'ollama' ? process.env.OLLAMA_HOST || 'http://localhost:11434' : undefined);
+
+  return {
+    provider,
+    model,
+    apiKey,
+    baseUrl,
+    maxSteps: overrides.maxSteps,
+  };
 }
