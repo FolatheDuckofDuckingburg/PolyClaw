@@ -2,7 +2,7 @@
 
 **An open-source, model-flexible terminal coding assistant.** Run local models through Ollama or connect a supported hosted provider.
 
-PolyClaw is designed to make model choice yours. The CLI itself is free and MIT-licensed; local inference can avoid per-request API charges, while hosted model providers may charge separately.
+PolyClaw's CLI is free and MIT-licensed. Local inference can avoid per-request hosted API charges, but requires compatible hardware, electricity, and a local model download. Hosted model providers may charge separately.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
@@ -13,13 +13,23 @@ PolyClaw is designed to make model choice yours. The CLI itself is free and MIT-
 - **Local-first option:** run a model on your own computer with Ollama.
 - **Provider choice:** Ollama, DeepSeek, OpenAI, Gemini, and Anthropic are supported by the current provider adapter.
 - **Terminal workflow:** give Poly a coding task in one command or use the interactive REPL.
+- **Workspace tools:** read and write text files in the project workspace.
+- **Approval-gated shell tool:** request permission to run individual executable commands.
 - **Open source:** inspect and modify the project under the MIT License.
 
-### What it can do today
+## What it can do today
 
-The current agent can read and write text files within the working project workspace and use a lightweight knowledge graph to keep track of codebase context.
+PolyClaw can interact with a configured model, read and write text files within its working project workspace, use a lightweight knowledge graph for codebase context, and request user approval before running a supported shell command.
 
-**Current limitations:** shell-command execution, automatic per-file model routing, and a full permission/approval UI are not yet implemented. Do not assume PolyClaw can run tests or build commands on your behalf yet. These are development goals, not current features.
+### Shell-command safety: important limitations
+
+- Each command request requires explicit approval. In the interactive REPL, type `YES` to approve; any other response denies it.
+- Commands are invoked directly without a shell. Shell operators, pipelines, and compound commands are not supported; ask for separate commands.
+- Some executables and operations are blocked by an initial denylist, including common destructive commands, `git push`, and `npm publish`.
+- **This is not a security sandbox.** The denylist is not exhaustive, and an approved executable may still change or delete files, access networks, or perform other consequential actions. Review the exact command and its arguments before approving it. Use PolyClaw only in a workspace where you can tolerate the effects of commands you approve.
+- Shell execution is available only when an interactive approval handler is configured; non-interactive modes without one fail closed.
+
+Features such as automatic per-file model routing, a comprehensive permission system, and end-to-end tests against a live local Ollama instance remain future work. Do not assume every coding task will succeed without supervision.
 
 ## Quick start: local model, no hosted API key
 
@@ -34,7 +44,7 @@ Install and start Ollama, then download a model. The default model is `deepseek-
 ollama pull deepseek-r1:8b
 ```
 
-The initial model download requires an internet connection. Once downloaded, inference runs locally; Ollama does not require a hosted model API key for this setup.
+The initial model download requires an internet connection. Once downloaded, inference runs locally; this setup does not require a hosted model API key.
 
 ### 2. Install and build PolyClaw
 
@@ -42,8 +52,10 @@ The initial model download requires an internet connection. Once downloaded, inf
 git clone https://github.com/FolatheDuckofDuckingburg/PolyClaw.git
 cd PolyClaw
 npm install
-npm run build
+npm test
 ```
+
+`npm test` builds the TypeScript project and runs the automated Node.js test suite.
 
 ### 3. Ask Poly a coding question
 
@@ -51,7 +63,7 @@ npm run build
 node dist/bin/polyclaw.js --provider ollama --model deepseek-r1:8b "Explain the structure of this project"
 ```
 
-Or start the interactive terminal:
+Or start the interactive terminal, where approval-gated shell requests can be reviewed:
 
 ```sh
 node dist/bin/polyclaw.js --provider ollama --model deepseek-r1:8b
@@ -61,7 +73,7 @@ Type `exit` or `quit` to leave the REPL.
 
 ### Windows PowerShell
 
-The commands above work in PowerShell too. If Ollama is installed and running locally, no API-key environment variable is needed for the local setup.
+The commands above work in PowerShell too. If Ollama is installed and running locally, no API-key environment variable is needed for this setup. If PowerShell blocks `npm.ps1` due to execution policy, use `npm.cmd install` rather than changing the system-wide execution policy.
 
 ## Hosted providers
 
@@ -120,12 +132,13 @@ Use `env:VARIABLE_NAME` to refer to an environment variable rather than putting 
 
 ## Roadmap
 
-- [ ] Reliable provider configuration and automated tests
-- [ ] Explicit, reviewable tool permissions
-- [ ] Safe shell-command tool with workspace-aware safeguards
+- [x] Provider configuration fixes and automated test workflow
+- [x] Approval-gated shell-command tool with an initial safety policy
+- [ ] Expand command-policy tests and improve workspace boundary enforcement
 - [ ] End-to-end tests against a local Ollama instance
 - [ ] Better patch previews and file-edit diffs
 - [ ] Clear recovery and error reporting
+- [ ] More comprehensive, reviewable tool permissions
 
 ## Contributing
 
