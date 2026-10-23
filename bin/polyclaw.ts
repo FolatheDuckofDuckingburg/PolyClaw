@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
+import readline from 'readline';
+import { setShellApprovalHandler } from '../src/tools/shell.js';
 import { loadConfig } from '../src/config.js';
 import { ClawEngine } from '../src/core/ClawEngine.js';
 import { startRepl } from '../src/ui/repl.js';
@@ -34,7 +36,18 @@ program
       const prompt = promptParts.join(' ').trim();
 
       if (prompt) {
-        await engine.execute(prompt);
+        setShellApprovalHandler((command) => new Promise((resolve) => {
+          const approval = readline.createInterface({ input: process.stdin, output: process.stdout });
+          approval.question(`\nPolyClaw requests permission to run:\n${command}\nType YES to approve, anything else to deny: `, (answer) => {
+            approval.close();
+            resolve(answer.trim() === 'YES');
+          });
+        }));
+        try {
+          await engine.execute(prompt);
+        } finally {
+          setShellApprovalHandler(undefined);
+        }
       } else {
         startRepl(engine);
       }
