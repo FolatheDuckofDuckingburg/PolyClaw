@@ -74,3 +74,38 @@ test('ignores an unsupported provider value from the environment', async () => {
     assert.equal(config.provider, 'ollama');
   });
 });
+
+test('uses provider-specific environment keys and ignores unrelated provider keys', async () => {
+  const cases = [
+    { provider: 'deepseek', env: { DEEPSEEK_API_KEY: 'deepseek-key', OPENAI_API_KEY: 'wrong-key' }, expected: 'deepseek-key' },
+    { provider: 'openai', env: { OPENAI_API_KEY: 'openai-key', GEMINI_API_KEY: 'wrong-key' }, expected: 'openai-key' },
+    { provider: 'gemini', env: { GEMINI_API_KEY: 'gemini-key', ANTHROPIC_API_KEY: 'wrong-key' }, expected: 'gemini-key' },
+    { provider: 'anthropic', env: { ANTHROPIC_API_KEY: 'anthropic-key', DEEPSEEK_API_KEY: 'wrong-key' }, expected: 'anthropic-key' },
+  ];
+  for (const item of cases) {
+    await withProfile(undefined, async (profilePath) => {
+      const config = await loadConfig({ provider: item.provider }, {
+        profilePath,
+        env: item.env,
+      });
+      assert.equal(config.apiKey, item.expected, item.provider);
+    });
+  }
+});
+
+test('CLI API key and base URL override profile and environment values', async () => {
+  await withProfile({
+    defaultProvider: 'ollama',
+    providers: { ollama: { baseUrl: 'http://profile.example:11434' } },
+  }, async (profilePath) => {
+    const config = await loadConfig({
+      apiKey: 'cli-key',
+      baseUrl: 'http://cli.example:11434',
+    }, {
+      profilePath,
+      env: { OLLAMA_HOST: 'http://env.example:11434' },
+    });
+    assert.equal(config.apiKey, 'cli-key');
+    assert.equal(config.baseUrl, 'http://cli.example:11434');
+  });
+});
