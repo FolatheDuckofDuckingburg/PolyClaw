@@ -23,17 +23,26 @@ function isBlocked(command: string, args: string[]): string | undefined {
     return `The executable "${executable}" is blocked by PolyClaw's initial shell safety policy.`;
   }
 
+  // Inspect every argument rather than assuming the subcommand is args[0].
+  // Git and npm accept global options before subcommands (for example, git -C . push).
   const normalized = args.map((arg) => arg.toLowerCase());
-  if (executable === 'git' && normalized[0] === 'push') {
+  if (executable === 'git' && normalized.includes('push')) {
     return 'git push is blocked to prevent accidental remote changes.';
   }
-  if (executable === 'npm' && ['publish', 'login', 'logout', 'unpublish'].includes(normalized[0] ?? '')) {
-    return `npm ${normalized[0]} is blocked by the initial shell safety policy.`;
+
+  if (executable === 'npm') {
+    const riskyNpmCommand = normalized.find((arg) =>
+      ['publish', 'login', 'logout', 'unpublish'].includes(arg),
+    );
+    if (riskyNpmCommand) {
+      return `npm ${riskyNpmCommand} is blocked by the initial shell safety policy.`;
+    }
   }
+
   // Git accepts combined short flags (for example, -fd) as well as --force.
   if (
     executable === 'git'
-    && normalized[0] === 'clean'
+    && normalized.includes('clean')
     && normalized.some((arg) => arg === '--force' || /^-[^-]*f/.test(arg))
   ) {
     return 'Destructive git clean commands are blocked.';
