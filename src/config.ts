@@ -7,6 +7,14 @@ const CONFIG_FILE = path.join(os.homedir(), '.PolyClawrc.json');
 
 type ConfigOverrides = Partial<Pick<ProviderConfig, 'provider' | 'model' | 'apiKey' | 'baseUrl' | 'maxSteps'>>;
 
+const DEFAULT_MODELS: Record<ProviderType, string> = {
+  ollama: 'deepseek-r1:8b',
+  deepseek: 'deepseek-coder',
+  openai: 'gpt-4o',
+  gemini: 'gemini-1.5-pro',
+  anthropic: 'claude-3-5-sonnet-20241022',
+};
+
 const API_KEY_ENV: Partial<Record<ProviderType, string>> = {
   deepseek: 'DEEPSEEK_API_KEY',
   openai: 'OPENAI_API_KEY',
@@ -36,7 +44,7 @@ export async function loadConfig(overrides: ConfigOverrides = {}): Promise<Provi
   const model = overrides.model
     ?? process.env.PolyClaw_MODEL
     ?? providerProfile.defaultModel
-    ?? (provider === 'ollama' ? 'deepseek-r1:8b' : '');
+    ?? DEFAULT_MODELS[provider];
 
   const apiKeyEnv = API_KEY_ENV[provider];
   const apiKey = overrides.apiKey
