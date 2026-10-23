@@ -1,6 +1,7 @@
 import { streamText } from 'ai';
 import { getLanguageModel } from '../providers/index.js';
 import { readFile, writeFile } from '../tools/fileOps.js';
+import { runShellCommand } from '../tools/shell.js';
 import { updateKnowledgeGraph, queryKnowledgeGraph, initializeGraph } from '../tools/graphOps.js';
 import { ProviderConfig } from '../types.js';
 
@@ -27,12 +28,13 @@ export class ClawEngine {
 
     const result = streamText({
       model,
-      system: 'You are PolyClaw, an autonomous terminal agent using an active project knowledge graph. Write and query nodes to trace context pathways across codebase files.',
+      system: 'You are PolyClaw, an autonomous terminal agent with access to project files, an approval-gated shell command tool, and an active project knowledge graph. Never claim a command ran unless its tool result confirms it. Explain why a command is needed before requesting approval.',
       prompt,
       maxSteps,
       tools: {
         readFile,
         writeFile,
+        runShellCommand,
         updateKnowledgeGraph,
         queryKnowledgeGraph
       },

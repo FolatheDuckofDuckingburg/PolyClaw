@@ -1,5 +1,6 @@
 import readline from 'readline';
 import { ClawEngine } from '../core/ClawEngine.js';
+import { setShellApprovalHandler } from '../tools/shell.js';
 
 const COLORS = {
   reset: '\x1b[0m',
@@ -44,9 +45,26 @@ export function startRepl(engine: ClawEngine): void {
     prompt: `${COLORS.boldRed}Poly 🦀 > ${COLORS.reset}`,
   });
 
+  let approvalPending = false;
+  let suppressNextLine = false;
+  setShellApprovalHandler((command) => new Promise((resolve) => {
+    approvalPending = true;
+    console.log(`\n\x1b[1;33mPolyClaw wants to run this command:\x1b[0m\n${command}`);
+    rl.question('Type YES to approve this command, anything else to deny: ', (answer) => {
+      approvalPending = false;
+      suppressNextLine = true;
+      resolve(answer.trim() === 'YES');
+    });
+  }));
+
   rl.prompt();
 
   rl.on('line', async (line) => {
+    if (approvalPending) return;
+    if (suppressNextLine) {
+      suppressNextLine = false;
+      return;
+    }
     const input = line.trim();
 
     if (input.toLowerCase() === 'exit' || input.toLowerCase() === 'quit') {
@@ -70,6 +88,7 @@ export function startRepl(engine: ClawEngine): void {
 
     rl.prompt();
   }).on('close', () => {
+    setShellApprovalHandler(undefined);
     console.log(`\n${COLORS.red}Poly scuttled away into the sand.${COLORS.reset}\n`);
     process.exit(0);
   });

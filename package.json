@@ -10,7 +10,8 @@
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build",
-    "start": "node dist/bin/polyclaw.js"
+    "start": "node dist/bin/polyclaw.js",
+    "test": "npm run build && node --test tests/*.test.js"
   },
   "keywords": [
     "cli",
