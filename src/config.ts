@@ -6,6 +6,7 @@ import { ProviderConfig, ProviderType } from './types.js';
 const CONFIG_FILE = path.join(os.homedir(), '.PolyClawrc.json');
 
 type ConfigOverrides = Partial<Pick<ProviderConfig, 'provider' | 'model' | 'apiKey' | 'baseUrl' | 'maxSteps'>>;
+type ConfigOptions = { profilePath?: string; env?: NodeJS.ProcessEnv };
 
 const DEFAULT_MODELS: Record<ProviderType, string> = {
   ollama: 'deepseek-r1:8b',
@@ -28,21 +29,25 @@ function isProviderType(value: unknown): value is ProviderType {
   return typeof value === 'string' && PROVIDERS.includes(value as ProviderType);
 }
 
-function readProfileApiKey(value: unknown): string | undefined {
+function readProfileApiKey(value: unknown, env: NodeJS.ProcessEnv): string | undefined {
   if (typeof value !== 'string' || !value) return undefined;
-  if (value.startsWith('env:')) return process.env[value.slice(4)] || undefined;
+  if (value.startsWith('env:')) return env[value.slice(4)] || undefined;
   return value;
 }
 
-export async function loadConfig(overrides: ConfigOverrides = {}): Promise<ProviderConfig> {
+export async function loadConfig(
+  overrides: ConfigOverrides = {},
+  options: ConfigOptions = {},
+): Promise<ProviderConfig> {
+  const env = options.env ?? process.env;
   let parsed: any = {};
   try {
-    parsed = JSON.parse(await fs.readFile(CONFIG_FILE, 'utf-8'));
+    parsed = JSON.parse(await fs.readFile(options.profilePath ?? CONFIG_FILE, 'utf-8'));
   } catch {
     // A missing or invalid profile falls back to environment variables and defaults.
   }
 
-  const envProvider = process.env.PolyClaw_PROVIDER;
+  const envProvider = env.PolyClaw_PROVIDER;
   const profileProvider = parsed.defaultProvider;
   const provider: ProviderType = overrides.provider
     ?? (isProviderType(envProvider) ? envProvider : undefined)
@@ -51,18 +56,18 @@ export async function loadConfig(overrides: ConfigOverrides = {}): Promise<Provi
 
   const providerProfile = parsed.providers?.[provider] ?? {};
   const model = overrides.model
-    ?? process.env.PolyClaw_MODEL
+    ?? env.PolyClaw_MODEL
     ?? providerProfile.defaultModel
     ?? DEFAULT_MODELS[provider];
 
   const apiKeyEnv = API_KEY_ENV[provider];
   const apiKey = overrides.apiKey
-    ?? readProfileApiKey(providerProfile.apiKey)
-    ?? (apiKeyEnv ? process.env[apiKeyEnv] : undefined);
+    ?? readProfileApiKey(providerProfile.apiKey, env)
+    ?? (apiKeyEnv ? env[apiKeyEnv] : undefined);
 
   const baseUrl = overrides.baseUrl
     ?? providerProfile.baseUrl
-    ?? (provider === 'ollama' ? process.env.OLLAMA_HOST || 'http://localhost:11434' : undefined);
+    ?? (provider === 'ollama' ? env.OLLAMA_HOST || 'http://localhost:11434' : undefined);
 
   return {
     provider,
