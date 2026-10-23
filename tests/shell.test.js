@@ -23,6 +23,7 @@ test('blocks risky Git and npm operations before requesting approval', async (t)
   const cases = [
     { command: 'git', args: ['push', 'origin', 'main'] },
     { command: 'git', args: ['clean', '-fd'] },
+    { command: 'git', args: ['clean', '--force'] },
     { command: 'npm', args: ['publish'] },
     { command: 'npm', args: ['unpublish', 'some-package'] },
   ];
@@ -81,7 +82,7 @@ test('runs an approved executable without invoking a shell', async () => {
       reason: 'verify the runtime version',
     });
     assert.equal(result.success, true);
-    assert.match(result.output, /^v\\d+\\./);
+    assert.match(result.output, /^v\d+\./);
     assert.equal(result.exitCode, 0);
   } finally {
     setShellApprovalHandler(undefined);
