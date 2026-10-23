@@ -1,103 +1,106 @@
 # 🦀 PolyClaw
 
+**An open-source, model-flexible terminal coding assistant.** Run local models through Ollama or connect a supported hosted provider.
 
-**The open-source, model-agnostic CLI coding agent.**  
-*Autonomous file editing, shell execution, and code analysis—powered by any local or cloud LLM.*
+PolyClaw is designed to make model choice yours. The CLI itself is free and MIT-licensed; local inference can avoid per-request API charges, while hosted model providers may charge separately.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](#)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
+> PolyClaw is an independent project and is not affiliated with or endorsed by Anthropic or any other model provider.
 
----
+## Why PolyClaw?
 
-</div>
+- **Local-first option:** run a model on your own computer with Ollama.
+- **Provider choice:** Ollama, DeepSeek, OpenAI, Gemini, and Anthropic are supported by the current provider adapter.
+- **Terminal workflow:** give Poly a coding task in one command or use the interactive REPL.
+- **Open source:** inspect and modify the project under the MIT License.
 
-## 🔍 Why PolyClaw?
+### What it can do today
 
-**PolyClaw** is a vendor-independent fork of Claude Code. While the original tool locks terminal agentics into a single proprietary ecosystem, PolyClaw provides a modular, model-agnostic layer that routes autonomous execution across local open-weights, proprietary cloud APIs, and custom enterprise inference endpoints.
+The current agent can read and write text files within the working project workspace and use a lightweight knowledge graph to keep track of codebase context.
 
-| Feature | Claude Code | 🦀 PolyClaw |
-| :--- | :---: | :---: |
-| **Primary Provider** | Anthropic Claude | **Any Provider** (Ollama, DeepSeek, OpenAI, Gemini, Claude) |
-| **Offline / Local Mode** | ❌ No | **✅ Yes** (via Ollama / LM Studio) |
-| **Multi-Model Routing** | ❌ Locked | **✅ Dynamic** (per command, file, or project context) |
-| **License** | Proprietary | **✅ MIT (100% Open Source)** |
+**Current limitations:** shell-command execution, automatic per-file model routing, and a full permission/approval UI are not yet implemented. Do not assume PolyClaw can run tests or build commands on your behalf yet. These are development goals, not current features.
 
----
+## Quick start: local model, no hosted API key
 
-## ⚡ Quick Start
+### 1. Install the prerequisites
 
-### Global Installation via package managers
+- [Node.js](https://nodejs.org/) (Node 22 recommended)
+- [Ollama](https://ollama.com/download)
 
-```
-# Install via npm globally
-npm install -g polyclaw-cli
+Install and start Ollama, then download a model. The default model is `deepseek-r1:8b`; it may require substantial RAM. Choose a smaller model if your computer cannot run it comfortably.
 
-# Or install via pnpm
-pnpm add -g polyclaw-cli
+```sh
+ollama pull deepseek-r1:8b
 ```
 
-### Building from Source
+The initial model download requires an internet connection. Once downloaded, inference runs locally; Ollama does not require a hosted model API key for this setup.
 
-```
-# Clone the repository
+### 2. Install and build PolyClaw
+
+```sh
 git clone https://github.com/FolatheDuckofDuckingburg/PolyClaw.git
 cd PolyClaw
-
-# Install dependencies and build the TypeScript distribution
-pnpm install
-pnpm build
-
-# Link the binary locally for development testing
-npm link
+npm install
+npm run build
 ```
 
----
+### 3. Ask Poly a coding question
 
-## ⚙️ Configuration & Providers
-
-PolyClaw looks for credentials and routing preferences via environment variables or a static system profile.
-
-### 1. Environment Variable Setup
-
-#### Local Models via Ollama (Free, Private & Fully Offline)
-```
-export PolyClaw_PROVIDER=ollama
-export PolyClaw_MODEL=deepseek-r1:8b
-export OLLAMA_HOST=http://localhost:11434
+```sh
+node dist/bin/polyclaw.js --provider ollama --model deepseek-r1:8b "Explain the structure of this project"
 ```
 
-#### DeepSeek API (Cloud Inference)
-```
-export PolyClaw_PROVIDER=deepseek
-export PolyClaw_MODEL=deepseek-coder
-export DEEPSEEK_API_KEY=your_key_here
-```
+Or start the interactive terminal:
 
-#### Alternative Cloud Providers
-```
-# OpenAI
-export PolyClaw_PROVIDER=openai
-export PolyClaw_MODEL=gpt-4o
-export OPENAI_API_KEY=your_key_here
-
-# Google Gemini
-export PolyClaw_PROVIDER=gemini
-export PolyClaw_MODEL=gemini-1.5-pro
-export GEMINI_API_KEY=your_key_here
-
-# Anthropic Claude
-export PolyClaw_PROVIDER=anthropic
-export PolyClaw_MODEL=claude-3-5-sonnet-20241022
-export ANTHROPIC_API_KEY=your_key_here
+```sh
+node dist/bin/polyclaw.js --provider ollama --model deepseek-r1:8b
 ```
 
-### 2. Configuration Profile File (`~/.PolyClawrc.json`)
+Type `exit` or `quit` to leave the REPL.
 
-Avoid managing temporary terminal variables by persisting your settings directly:
+### Windows PowerShell
 
+The commands above work in PowerShell too. If Ollama is installed and running locally, no API-key environment variable is needed for the local setup.
+
+## Hosted providers
+
+Hosted providers may charge for usage and require their own API keys. Set the provider and model using CLI flags, or configure environment variables:
+
+| Provider | Provider name | API key environment variable |
+| --- | --- | --- |
+| Ollama | `ollama` | Not required for local Ollama |
+| DeepSeek | `deepseek` | `DEEPSEEK_API_KEY` |
+| OpenAI | `openai` | `OPENAI_API_KEY` |
+| Google Gemini | `gemini` | `GEMINI_API_KEY` |
+| Anthropic | `anthropic` | `ANTHROPIC_API_KEY` |
+
+Example:
+
+```sh
+node dist/bin/polyclaw.js --provider openai --model gpt-4o "Review this project structure"
 ```
+
+Pass secrets through environment variables or a secure local configuration. Avoid committing API keys to source control.
+
+## CLI options
+
+```text
+polyclaw [prompt...]
+  -p, --provider <provider>   ollama, deepseek, openai, gemini, anthropic
+  -m, --model <model>         Model identifier
+  -k, --api-key <key>         API key override
+  -u, --base-url <url>        Endpoint base URL override
+  -s, --max-steps <number>    Maximum execution loop steps
+```
+
+When running from a source checkout, replace `polyclaw` with `node dist/bin/polyclaw.js`.
+
+## Configuration profile
+
+PolyClaw can read `~/.PolyClawrc.json`. Example:
+
+```json
 {
   "defaultProvider": "ollama",
   "providers": {
@@ -105,51 +108,29 @@ Avoid managing temporary terminal variables by persisting your settings directly
       "baseUrl": "http://localhost:11434",
       "defaultModel": "deepseek-r1:8b"
     },
-    "deepseek": {
-      "apiKey": "env:DEEPSEEK_API_KEY",
-      "defaultModel": "deepseek-coder"
-    },
     "openai": {
       "apiKey": "env:OPENAI_API_KEY",
       "defaultModel": "gpt-4o"
     }
-  },
-  "settings": {
-    "autoApproveCommands": false,
-    "theme": "dark"
   }
 }
 ```
 
----
+Use `env:VARIABLE_NAME` to refer to an environment variable rather than putting a secret directly in the profile.
 
-## 🚀 Usage Examples
+## Roadmap
 
-```
-# Initialize an interactive REPL terminal session
-PolyClaw
+- [ ] Reliable provider configuration and automated tests
+- [ ] Explicit, reviewable tool permissions
+- [ ] Safe shell-command tool with workspace-aware safeguards
+- [ ] End-to-end tests against a local Ollama instance
+- [ ] Better patch previews and file-edit diffs
+- [ ] Clear recovery and error reporting
 
-# Run a single autonomous execution pass (One-shot execution)
-PolyClaw "Refactor src/utils.ts to handle async retries with exponential backoff"
+## Contributing
 
-# Dynamically override the configuration router on the fly
-PolyClaw --provider deepseek --model deepseek-coder "Fix failing unit tests in tests/auth.test.ts"
-```
+Bug reports, tests, documentation improvements, and provider fixes are welcome. Please describe what you tested and distinguish verified behavior from planned functionality.
 
----
+## License
 
-## 🤝 Contributing
-
-Contributions are highly appreciated! If you want to add new LLM provider integrations, enhance the file-editing parsing logic, or optimize terminal streaming latency:
-
-1. Fork the repository.
-2. Create a clean feature branch (`git checkout -b feature/AmazingFeature`).
-3. Commit your refactored code changes (`git commit -m 'Add support for custom provider context window adjustments'`).
-4. Push to the remote branch (`git push origin feature/AmazingFeature`).
-5. Open a formal Pull Request against the `main` branch.
-
----
-
-## 📄 License
-
-PolyClaw is distributed under the **MIT License**. See the `LICENSE` file for full compliance details.
+PolyClaw is distributed under the [MIT License](LICENSE).
