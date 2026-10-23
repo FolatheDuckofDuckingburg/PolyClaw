@@ -22,6 +22,12 @@ const API_KEY_ENV: Partial<Record<ProviderType, string>> = {
   anthropic: 'ANTHROPIC_API_KEY',
 };
 
+const PROVIDERS: readonly ProviderType[] = ['ollama', 'deepseek', 'openai', 'gemini', 'anthropic'];
+
+function isProviderType(value: unknown): value is ProviderType {
+  return typeof value === 'string' && PROVIDERS.includes(value as ProviderType);
+}
+
 function readProfileApiKey(value: unknown): string | undefined {
   if (typeof value !== 'string' || !value) return undefined;
   if (value.startsWith('env:')) return process.env[value.slice(4)] || undefined;
@@ -36,10 +42,13 @@ export async function loadConfig(overrides: ConfigOverrides = {}): Promise<Provi
     // A missing or invalid profile falls back to environment variables and defaults.
   }
 
-  const provider = overrides.provider
-    ?? (process.env.PolyClaw_PROVIDER as ProviderType | undefined)
-    ?? parsed.defaultProvider
+  const envProvider = process.env.PolyClaw_PROVIDER;
+  const profileProvider = parsed.defaultProvider;
+  const provider: ProviderType = overrides.provider
+    ?? (isProviderType(envProvider) ? envProvider : undefined)
+    ?? (isProviderType(profileProvider) ? profileProvider : undefined)
     ?? 'ollama';
+
   const providerProfile = parsed.providers?.[provider] ?? {};
   const model = overrides.model
     ?? process.env.PolyClaw_MODEL
