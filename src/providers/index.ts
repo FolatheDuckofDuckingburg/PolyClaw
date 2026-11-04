@@ -1,9 +1,21 @@
 import { openai, createOpenAI } from '@ai-sdk/openai';
 import { anthropic as anthropicProvider } from '@ai-sdk/anthropic';
 import { google } from '@ai-sdk/google';
-import { createOllama } from 'ollama-ai-provider';
 import { ProviderConfig } from '../types.js';
 import { LanguageModel } from 'ai';
+
+/**
+ * Ollama serves an OpenAI-compatible API under /v1 (since 0.1.24) that streams
+ * native tool calls. The native /api/chat streaming parser in
+ * ollama-ai-provider 1.2.0 only detects tool calls embedded in the model's
+ * text, so models that use Ollama's native tool API never call tools through
+ * it. Both http://host:11434 and http://host:11434/api are accepted here.
+ */
+function ollamaOpenAIBaseUrl(baseUrl: string | undefined): string {
+  const base = (baseUrl || 'http://localhost:11434').replace(/\/+$/, '');
+  const withoutApi = base.endsWith('/api') ? base.slice(0, -'/api'.length) : base;
+  return `${withoutApi}/v1`;
+}
 
 export function getLanguageModel(config: ProviderConfig): LanguageModel {
   switch (config.provider) {
@@ -22,8 +34,9 @@ export function getLanguageModel(config: ProviderConfig): LanguageModel {
       return customOpenAI(config.model);
     }
     case 'ollama': {
-      const ollama = createOllama({
-        baseURL: config.baseUrl || 'http://localhost:11434/api',
+      const ollama = createOpenAI({
+        baseURL: ollamaOpenAIBaseUrl(config.baseUrl),
+        apiKey: config.apiKey || 'ollama',
       });
       return ollama(config.model);
     }

@@ -4,7 +4,7 @@ import { generateText } from 'ai';
 import { getLanguageModel } from '../dist/src/providers/index.js';
 
 const enabled = process.env.POLYCLAW_OLLAMA_TEST === '1';
-const baseUrl = process.env.OLLAMA_HOST || 'http://localhost:11434';
+const baseUrl = (process.env.OLLAMA_HOST || 'http://localhost:11434').replace(/\/+$/, '');
 const modelName = process.env.POLYCLAW_OLLAMA_MODEL || 'deepseek-r1:8b';
 
 test('optional live Ollama generation smoke test', { skip: !enabled && 'Set POLYCLAW_OLLAMA_TEST=1 to run against a live Ollama server' }, async () => {
@@ -23,10 +23,12 @@ test('optional live Ollama generation smoke test', { skip: !enabled && 'Set POLY
   );
 
   const result = await generateText({
+    // The Ollama provider now speaks the OpenAI-compatible /v1 API, which serves
+    // native tool calls while streaming.
     model: getLanguageModel({
       provider: 'ollama',
       model: modelName,
-      baseUrl: `${baseUrl.replace(/\/$/, '')}/api`,
+      baseUrl,
     }),
     prompt: 'Reply with the single word OK.',
     maxTokens: 12,

@@ -3,6 +3,7 @@
 import { Command } from 'commander';
 import readline from 'readline';
 import { setShellApprovalHandler } from '../src/tools/shell.js';
+import { setFileApprovalHandler } from '../src/tools/fileOps.js';
 import { loadConfig } from '../src/config.js';
 import { ClawEngine } from '../src/core/ClawEngine.js';
 import { startRepl } from '../src/ui/repl.js';
@@ -36,17 +37,42 @@ program
       const prompt = promptParts.join(' ').trim();
 
       if (prompt) {
-        setShellApprovalHandler((command) => new Promise((resolve) => {
-          const approval = readline.createInterface({ input: process.stdin, output: process.stdout });
-          approval.question(`\nPolyClaw requests permission to run:\n${command}\nType YES to approve, anything else to deny: `, (answer) => {
-            approval.close();
-            resolve(answer.trim() === 'YES');
-          });
-        }));
+        // One interface is shared by every approval prompt. Creating and closing a
+        // fresh interface per prompt drops answers that are already buffered on a
+        // piped stdin, which silently denied the second request.
+        const approval = readline.createInterface({ input: process.stdin, output: process.stdout });
+        const bufferedLines: string[] = [];
+        const lineWaiters: Array<(line: string) => void> = [];
+        approval.on('line', (line) => {
+          const waiter = lineWaiters.shift();
+          if (waiter) waiter(line);
+          else bufferedLines.push(line);
+        });
+        approval.on('close', () => {
+          // Stdin ended without an answer: deny anything still waiting.
+          while (lineWaiters.length > 0) (lineWaiters.shift() as (line: string) => void)('');
+        });
+        const answerLine = (): Promise<string> => new Promise((resolve) => {
+          if (bufferedLines.length > 0) {
+            resolve(bufferedLines.shift() as string);
+            return;
+          }
+          lineWaiters.push(resolve);
+        });
+        const askForApproval = async (heading: string): Promise<boolean> => {
+          process.stdout.write(`${heading}\nType YES to approve, anything else to deny: `);
+          const answer = await answerLine();
+          return answer.trim() === 'YES';
+        };
+
+        setShellApprovalHandler((command) => askForApproval(`\nPolyClaw requests permission to run:\n${command}`));
+        setFileApprovalHandler((preview) => askForApproval(`\n${preview}`));
         try {
           await engine.execute(prompt);
         } finally {
           setShellApprovalHandler(undefined);
+          setFileApprovalHandler(undefined);
+          approval.close();
         }
       } else {
         startRepl(engine);
